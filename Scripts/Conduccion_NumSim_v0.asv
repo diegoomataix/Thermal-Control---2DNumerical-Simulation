@@ -9,33 +9,56 @@
 close all; clear all; clc;
 
 %% Datos
-%%%% PCB (de FR4) %%%%
-dx = 140e-3; % m
-dy = 100e-3; % m
-dz = 1.5e-3; % m
-Vol = dx*dy*dz; % m^2
-    % Recubrimiento de cobre del PCB por cada lado
-t_rec = 50e-6; % m      % en una de las caras es continuo, y en la otra 
-                        % ocupa solo el 10% de la superficie en la cual van 
-                        % montados tres IC
-    % los lados cortos de la PCB tienen contacto termico con paredes a 25C
-T_paredes =  convtemp(25, 'C', 'K'); % + 273.15K
-    % los otros dos bordes estan termicamente aislados.
-    % para el FR4:
-k_plano = 0.5;
-k_traves = k_plano / 2;
-                        
-%%%% IC %%%%
-dx_ic = 40e-3; % m
-dy_ic = 20e-3; % m
-dz_ic = 3e-3;  % m
-Vol_ic = dx_ic * dy_ic * dz_ic; % m^2
-    % dispando:
-disip_ic = 5; % W
-    % conductividad termica:
-k_ic = 50; % W / ( m * K )
-    % capacidad termica:
-C_ic = 20; % J / K
-    % separación entre ICs
-dist_ic = 20e-3;    % m 
+Conduccion_NumSim_DATOS
+
+%% Apartado A
+
+
+%% ======= FUNCIONES ADICIONALES ======= %%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function E = Energy_E(h, v)
+    E = h * v;
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function lambda = wavelength(c, v)
+    lambda = c / v;
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function E_b = tot_blacbody_emiss_p(stefan_boltz, T)
+    E_b = stefan_boltz * T^4    % total blackbody emissive power
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function E_b = planks_law(C_1, C_2, lambda, T)  
+    %  spectral emissive power of a blackbody
+    E_b = C_1 / ( lambda^5 * exp( C_2 / (lambda*T)) - 1);   
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function T = wiens_displacement(lambda_max_p, T)
+    T = 2898 / lambda_max_p;    % 2898 micrometer * K
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function I_e = emitted_rad_int(delta, Qdot_e, dA, theta, domega, dlambda)
+    I_e = delta * Qdot_e / (dA * cos(theta) * domega * dlambda); 
+    % W / ( m^2 * sr * micrometer )
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% function M = EcCohete(Isp, DV, M_o, tipo)
+%     if nargin < 3
+%         tipo = 'Mp';
+%     end
+%     
+%     switch(tipo)
+%         case 'Mp'   % M prop
+%         M = M_o * (1 - exp(-(DV/Isp)));
+%         case 'Mf'   % M final
+%         M = M_o * (exp(-DV/Isp));
+%         otherwise
+%         M = 0;
+%         disp('Error')
+%     end
+% end
 

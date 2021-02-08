@@ -46,3 +46,16 @@ emis_cara = 0.5; % emisividad media por el lado de la cara opuesta
 % caja electronica que se puede considerar negra
 T_caja = convtemp(45, 'C', 'K'); % T caja electronica (para apartado c)
 
+%% Constantes
+
+h = 6.6256e-34;  % J * s                      % Plank's constant
+c_0 = 2.9979e8;  % m / s                      % velocidad de la luz
+stefan_boltz = 5.67e-8; % W / ( m^2 * K^4 )   % Stefan-Boltzmann constant
+T_sun = 5800;    % K
+T_cbr = 2.7;     % K
+C_1 = 3.742e8;   % w * micrometer^4 / m^2  % 2 * pi * h * c^2
+C_2 = 1.439e4;   % micrometer * K          % h * c / k
+k = 1.38065e-23; % J / K                      % Boltzmann constant
+visible_range_min = 0.4e-6;  % m  % bandwidth
+visible_range_max = 0.76e-6; % m  % bandwidth   
+
