@@ -13,6 +13,8 @@ Conduccion_NumSim_DATOS
 
 %% Apartado A
 
+phi = Q_ic / Vol
+T_0 = T_b + 1/8 * ( phi * dy^2 / k_plano)
 %% Apartado B
 
 %% Apartado C

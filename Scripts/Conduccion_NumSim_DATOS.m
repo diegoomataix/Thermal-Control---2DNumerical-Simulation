@@ -13,13 +13,14 @@ close all; clear all; clc;
 dx = 140e-3;    % m
 dy = 100e-3;    % m
 dz = 1.5e-3;    % m
-Vol = dx*dy*dz; % m^2
+A = dx*dy;      % m^2
+Vol = dx*dy*dz; % m^3
     % Recubrimiento de cobre del PCB por cada lado
 t_rec = 50e-6;  % m     % en una de las caras es continuo, y en la otra 
                         % ocupa solo el 10% de la superficie en la cual van 
                         % montados tres IC
     % los lados cortos de la PCB tienen contacto termico con paredes a 25C
-T_paredes =  convtemp(25, 'C', 'K'); 
+T_b =  convtemp(25, 'C', 'K'); 
     % los otros dos bordes estan termicamente aislados.
     % para el FR4:
 k_plano = 0.5;              % W / ( m * K )
@@ -29,9 +30,9 @@ k_traves = k_plano / 2;     % W / ( m * K )
 dx_ic = 40e-3;  % m
 dy_ic = 20e-3;  % m
 dz_ic = 3e-3;   % m
-Vol_ic = dx_ic * dy_ic * dz_ic; % m^2
+Vol_ic = dx_ic * dy_ic * dz_ic; % m^3
     % dispando:
-disip_ic = 5;   % W
+Q_ic = 5;   % W
     % conductividad termica:
 k_ic = 50;      % W / ( m * K )
     % capacidad termica:
