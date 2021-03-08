@@ -13,6 +13,8 @@ close all; clear all; clc;
 dx = 140e-3;    % [m]
 dy = 100e-3;    % [m]
 dz = 1.5e-3;    % [m]
+dz_pcb = 1.4e-3;% [m]
+dz_cu = (dz - dz_pcb)/2;% [m]
 A = dx*dy;      % [m^2]
 Vol = dx*dy*dz; % [m^3]
     % Recubrimiento de cobre del PCB por cada lado
@@ -27,8 +29,8 @@ k_plano = 0.5;              % [W / ( m * K )]
 k_traves = k_plano / 2;     % [W / ( m * K )]
                         
 %%%% IC %%%%
-dx_ic = 40e-3;  % [m]
-dy_ic = 20e-3;  % [m]
+dy_ic = 40e-3;  % [m]
+dx_ic = 20e-3;  % [m]
 dz_ic = 3e-3;   % [m]
 Vol_ic = dx_ic * dy_ic * dz_ic; % [m^3]
     % dispando:
@@ -58,7 +60,7 @@ T_sun = 5800;    % [K]
 T_cbr = 2.7;     % [K]
 C_1 = 3.742e8;   % [w * micrometer^4 / m^2      % 2 * pi * h * c^2]
 C_2 = 1.439e4;   % [micrometer * K]             % h * c / k
-k = 1.38065e-23; % [J / K]                      % Boltzmann constant
+sigma = 1.38065e-23; % [J / K]                  % Boltzmann constant
 visible_range_min = 0.4e-6;  % [m]  % bandwidth
 visible_range_max = 0.76e-6; % [m]  % bandwidth   
 
