@@ -12,28 +12,28 @@ D=dx;           %Diametre or characteristic transversal dimension [m]
 L=dy;           %Length along heat path [m]
 A=pi*D^2/4;     %Area. Direct input, or computed from diameter as A=pi*D^2/4 [m2]
 p=pi*D;         %Perimeter. Direct input, or computed from diameter as p=pi*D [m]
-k=k_eff;        %Conductivity [W/(m·K)]
-c=C_ic;           %Thermal capacity [J/(kg·K)]
+%k_eff=k_eff;        %Conductivity [W/(m·K)]
+c=C_ic;         %Thermal capacity [J/(kg·K)]
 rho=1000;       %Density [kg/m3]
 h=2;            %Convective coefficient [W/(m^2·K)], transversal
 eps=0;          %Emissivity, transversal
 sigma=5.67e-8;  %S-B constant
 N=20;           %# of elements along L
-M=1e5;          %# of time steps
-Tinf=288;       %Ambient temperature [K]
-tsim=600;     %Total simulation time [s]
-Troot=303;      %Root temperature [K] in case it is fixed
+M=1e4;          %# of time steps
+Tinf=2.7;       %Ambient temperature [K]
+tsim=100;       %Total simulation time [s]
+Troot=T_b;      %Root temperature [K] in case it is fixed
 Qroot=0;        %Root heat transfer power [W] in case it is fixed
-phi=5/(A*L);    %Volumetric dissipation [W/m^3] if any
+%phi=15/(A*L);   %Volumetric dissipation [W/m^3] if any
 
 %%Inicialization:
-a=k/(rho*c);            %Diffusivity [m^2/s]
+a=k_eff/(rho*c);            %Diffusivity [m^2/s]
 Dx=L/N;                 %Element width
 X=linspace(0,L,N+1);    %Node position list (equispaced)
 Dt=tsim/M;              %Time step (you might fix it instead of tsim)
 t=linspace(0,tsim,M)';  %Time vector
 Fo=a*Dt/(Dx*Dx)         %Fourier's number
-Bi=h*p*Dx/(k*A/Dx)      %Biot's number
+Bi=h*p*Dx/(k_eff*A/Dx)      %Biot's number
 %Check for stability of the explicit finite difference method
 disp(['Stability requires 1-Fo*(2+Bi)<0. It actually is =',num2str(1-Fo*(2+Bi))])
 if 1-Fo*(2+Bi)<0 disp('This is unstable; increase number of time steps'), end

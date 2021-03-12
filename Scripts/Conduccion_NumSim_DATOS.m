@@ -38,7 +38,7 @@ Q_ic = 5;       % [W]
 Q_ic_tot = 3 * Q_ic /2;     % [W] (symmetry)
     % conductividad termica:
 k_ic = 50;       % [W / ( m * K )]
-k_Cu = 386;      % [W / ( m * K )]
+k_Cu = 395;      % [W / ( m * K )]
     % capacidad termica:
 C_ic = 20;       % [J / K]
     % separación entre ICs
