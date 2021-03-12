@@ -23,137 +23,132 @@ choose = 'b';
 
 switch(choose)
     case 'a'
-%% Apartado A
-% Considerando que la tarjeta sólo evacua calor por los bordes,
-% determinar la temperatura máxima que se alcanzaría si toda la disipación
-% estuviese uniformemente repartida en la PCB y los IC no influyeran.
+        %% Apartado A
+        % Considerando que la tarjeta sólo evacua calor por los bordes,
+        % determinar la temperatura máxima que se alcanzaría si toda la disipación
+        % estuviese uniformemente repartida en la PCB y los IC no influyeran.
         phi = (3 * Q_ic) / Vol                              % Volumetric dissipation [W/m^3]
         e =      [t_rec dz_pcb t_rec];                      % Dimension Vector [m]
         k_vect = [k_Cu k_plano (0.1*k_Cu+0.9*k_plano)];     % Conductivity Vector [W/(m·K)] tercera capa es donde van los IC, cubierta solo al 10% de cobre
         k_eff = sum(k_vect.*e)/sum(e)                       % Effective Conductivity [W/(m·K)]
-
-method = 2;
-
-switch(method)
-    case 1
-        DT = 1/8 * ( phi * dx^2 / k_eff );                  % Delta T [K]
-        T_0 = T_b + DT                                      % Max T [K]
-        T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [C]
-    case 2
-        L = dx/2;                                           % [m]
-        b = phi * L / k_eff;                                % [K*m]
-        m = 1e6;                                            % Spacial Subdivisions
-        M = 14*m;                                           % Total n of spacial subdivisions
-        x = linspace(0, dx, M);                             % [m]
-        for i = 1:M
-            T(i) = T_b + b*x(i) - (phi/(2*k_eff))*x(i)^2;   % [K]
+        
+        method = 2;
+        
+        switch(method)
+            case 1
+                DT = 1/8 * ( phi * dx^2 / k_eff );                  % Delta T [K]
+                T_0 = T_b + DT                                      % Max T [K]
+                T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [C]
+            case 2
+                L = dx/2;                                           % [m]
+                b = phi * L / k_eff;                                % [K*m]
+                m = 1e6;                                            % Spacial Subdivisions
+                M = 14*m;                                           % Total n of spacial subdivisions
+                x = linspace(0, dx, M);                             % [m]
+                for i = 1:M
+                    T(i) = T_b + b*x(i) - (phi/(2*k_eff))*x(i)^2;   % [K]
+                end
+                T_0 = max(T)                                        % Max T [K]
+                T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [C]
+                
+                figure()
+                plot(x,T)
         end
-        T_0 = max(T)                                        % Max T [K]
-        T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [C]
+        
+        %% Apartado B
+    case 'b'
+        % Considerando que la tarjeta sólo evacua calor por los bordes, determinar
+        % la temperatura máxima que se alcanzaría con un modelo unidimensional en el
+        % que los IC llegaran hasta los bordes aislados, en el límite kIC→∞, y con la kIC dada.
+        
+        % Mesh
+        m = 1e2;                                            % Spatial Subdivisions
+        M = 14*m;                                           % Total n of spatial subdivisions
+        x = linspace(0, dx, M);                             % Spatial Coordinates [m]
+        
+        % Límites de cada tramo
+        for i = 1:6
+            lim(i) = 2*i*m;
+        end
+        
+        % Define coefficients and some parameters
+        phi = (3 * Q_ic) / Vol;                             % Volumetric dissipation [W/m^3]
+        e =      [t_rec dz_pcb t_rec];                      % Dimension Vector [m]
+        k_vect = [k_Cu k_plano (0.1*k_Cu+0.9*k_plano)];     % Conductivity Vector [W/(m·K)] tercera capa es donde van los IC, cubierta solo al 10% de cobre
+        k_eff = sum(k_vect.*e)/sum(e);                      % Effective Conductivity [W/(m·K)]
+        L = dx/2;                                           % [m]
+        A = 0.1 * 0.0015;                                   % [m^2]
+        a = T_b;                                            % [K]
+        b = phi * L / k_eff;                                % [K*m]
+        Q = 1.5*Q_ic;
+        Q1 = Q;
+        Q2 = Q*(1/3);
+        
+        % e_ic =      [dz_pcb t_rec t_rec 3];                         % Dimension Vector [m]
+        % k_vect_ic = [k_Cu k_plano (0.1*k_Cu+0.9*k_plano) k_ic];     % Conductivity Vector [W/(m·K)] tercera capa es donde van los IC, cubierta solo al 10% de cobre
+        % k_eff_ic = ( sum(k_vect_ic.*e_ic)  )/sum(e_ic)              % Effective Conductivity [W/(m·K)]
+        k_eff_ic = ( k_plano*1.4 + k_Cu*0.05 + (0.1*k_Cu+0.9*k_plano)*0.05+3*k_ic ) /4.5         % Effective Conductivity [W/(m·K)]
+        A_ic = 0.0045*0.1;
+        phi_ic = Q_ic / (0.02 * 0.1 * 0.0045);
+        
+        %
+        T = zeros(1, M);
+        for i = 1: lim(1)
+            DT = Q1 * x(i) / (k_eff * A);
+            T(i) = a + DT;
+        end
+        
+        a = T(lim(1));
+        b = Q1 / (k_eff_ic * A_ic);
+        for i = lim(1):lim(2)
+            T(i) = a + b * (x(i) - x(lim(1))) - (phi_ic / (2*k_eff_ic)) * (x(i) - x(lim(1)))^2;
+        end
+        
+        for i = (lim(2)+1):lim(3)
+            DT = Q2 * (x(i) - x(lim(2))) / (k_eff*A);
+            T(i) = T(lim(2)) + DT;
+        end
+        
+        a = T(lim(3));
+        b = Q2 / (k_eff_ic*A_ic);
+        for i = (lim(3)+1): (M/2)
+            T(i) = a + b * (x(i) - x(lim(3))) - (phi_ic / (2*k_eff_ic)) * (x(i) - x(lim(3)) )^2;
+        end
+        
+        T(((M/2)+1):M) = T(M/2:-1:1);                       % Mirror curve
+      
 
         figure()
-        plot(x,T)
-end
-
-%% Apartado B
-    case 'b'
-% Considerando que la tarjeta sólo evacua calor por los bordes, determinar
-% la temperatura máxima que se alcanzaría con un modelo unidimensional en el
-% que los IC llegaran hasta los bordes aislados, en el límite kIC→∞, y con la kIC dada.
-
-% Mesh
-m = 1e5;                                            % Spatial Subdivisions
-M = 14*m;                                           % Total n of spatial subdivisions
-x = linspace(0, dx, M);                             % Spatial Coordinates [m]
-
-% Límites de cada tramo
-t1 = 2*m;
-t2 = 4*m;
-t3 = 6*m;
-t4 = 8*m;
-t5 = 10*m;
-t6 = 12*m;
-
-% Define coefficients and some parameters
-phi = (3 * Q_ic) / Vol;                             % Volumetric dissipation [W/m^3]
-e =      [t_rec dz_pcb t_rec];                      % Dimension Vector [m]
-k_vect = [k_Cu k_plano (0.1*k_Cu+0.9*k_plano)];     % Conductivity Vector [W/(m·K)] tercera capa es donde van los IC, cubierta solo al 10% de cobre
-k_eff = sum(k_vect.*e)/sum(e);                      % Effective Conductivity [W/(m·K)]
-L = dx/2;                                           % [m]
-A = 0.1 * 0.0015;                                   % [m^2]
-a = T_b;                                            % [K]
-b = phi * L / k_eff;                                % [K*m]
-Q = 1.5*Q_ic;
-Q1 = Q;
-Q2 = Q*(1/3);
-
-% e_ic =      [dz_pcb t_rec t_rec 3];                         % Dimension Vector [m]
-% k_vect_ic = [k_Cu k_plano (0.1*k_Cu+0.9*k_plano) k_ic];     % Conductivity Vector [W/(m·K)] tercera capa es donde van los IC, cubierta solo al 10% de cobre
-% k_eff_ic = ( sum(k_vect_ic.*e_ic)  )/sum(e_ic)              % Effective Conductivity [W/(m·K)]
-k_eff_ic = ( k_plano*1.4 + k_Cu*0.05 + (0.1*k_Cu+0.9*k_plano)*0.05+3*k_ic ) /4.5;         % Effective Conductivity [W/(m·K)]
-A_ic = 0.0045*0.1;
-phi_ic = Q_ic / (0.02 * 0.1 * 0.0045);
-
-% inicializacion
-T = zeros(1, 1400);
-for i = 1: t1
-    DT = Q1 * x(i) / (k_eff * A);
-    T(i) = a + DT;
-end
-
-a = T(t1);
-b = Q1 / (k_eff_ic * A_ic);
-for i = t1:t2
-    T(i) = a + b * (x(i) - x(t1)) - (phi_ic / (2*k_eff_ic)) * (x(i) - x(t1))^2;
-end
-
-for i = (t2+1):t3
-    DT = Q2 * (x(i) - x(t2)) / (k_eff*A);
-    T(i) = T(t2) + DT;
-end
-
-a = T(t3);
-b = Q2 / (k_eff_ic*A_ic);
-for i = (t3+1):t4
-    T(i) = a + b * (x(i) - x(t3)) - (phi_ic / (2*k_eff_ic)) * (x(i) - x(t3) )^2;
-end
-
-for i = (t4+1):t5
-    DT = -Q2 * (x(i) - x(t4)) / (k_eff * A);
-    T(i) = DT + T(t4);
-end
-
-a = T(t5);
-b = -Q1 / (k_eff_ic*A_ic);
-for i = (t5+1):t6
-    T(i) = a + b * (x(i) - x(t5)) - (phi_ic / (2*k_eff_ic)) * (x(i) - x(t5))^2;
-end
-
-for i = (t6+1):M
-    DT = -Q1 * (x(i) - x(t6)) / (k_eff*A);
-    T(i) = DT + T(t6);
-end
-
-figure()
-plot(x,T)
-T_0 = max(T)                                        % Max T [K]
-T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [C]
-
-
-%% Apartado C
-
+        hold on
+        plot(x,T, '-k','LineWidth',1)
+        box on
+        grid on
+        axis tight
+        axis([0 dx T_b*0.9 max(T)*1.1])
+        ylabel('{\it T} [K]')
+        xlabel('{\it x} [m]');
+        box on
+        set(gca,'FontSize',18)
+        hold off
+        
+        T_0 = max(T)                                        % Max T [K]
+        T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [C]
+        
+        
+        %% Apartado C
+        
     case 'c'
-
-
-%% Apartado D
-
+        
+        
+        %% Apartado D
+        
     case 'd'
-
-
-%% Apartado E
-
+        
+        
+        %% Apartado E
+        
     case 'e'
-
+        
 end
 
 
