@@ -87,49 +87,6 @@ Q = 1.5*Q_ic;
 Q1 = Q;
 Q2 = Q*(1/3);
 
-% para k infinito
-% 
-% % inicializacion
-% T = zeros(1, 1400);
-% 
-% for i = 1: t1
-%     DT = Q1 * x(i)/(k_eff*A);
-%     T(i) = a + DT;
-% end
-% 
-% for i = t1:t2
-%     T(i) = T(t1);
-% end
-% 
-% for i = (t2+1):t3
-%     DT = Q2 * (x(i) - x(t2)) / (k_eff * A);
-%     T(i) = T(t2) + DT;
-% end
-% 
-% for i = (t3+1):t4
-%     T(i) = T(t3);
-% end
-% 
-% for i = (t4+1):t5
-%     DT = -Q2 * (x(i) - x(t4)) / (k_eff * A);
-%     T(i) = T(t4) + DT;
-% end
-% 
-% for i = (t5+1):t6
-%     T(i) = T(t5);
-% end
-% 
-% for i = (t6+1):M
-%     DT = -Q1 * (x(i) - x(t6)) / (k_eff*A);
-%     T(i) = DT + T(t6);
-% end
-% 
-% figure()
-% plot(x, T)
-% T_0 = max(T)                                        % Max T [K]
-% T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [C]
-        
-% % para k_ic = 50
 % e_ic =      [dz_pcb t_rec t_rec 3];                         % Dimension Vector [m]
 % k_vect_ic = [k_Cu k_plano (0.1*k_Cu+0.9*k_plano) k_ic];     % Conductivity Vector [W/(m·K)] tercera capa es donde van los IC, cubierta solo al 10% de cobre
 % k_eff_ic = ( sum(k_vect_ic.*e_ic)  )/sum(e_ic)              % Effective Conductivity [W/(m·K)]
