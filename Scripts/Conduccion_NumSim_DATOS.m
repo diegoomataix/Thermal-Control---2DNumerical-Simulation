@@ -58,9 +58,9 @@ c_0 = 2.9979e8;  % [m / s]                      % velocidad de la luz
 stefan_boltz = 5.67e-8; % [W / ( m^2 * K^4 )]   % Stefan-Boltzmann constant
 T_sun = 5800;    % [K]
 T_cbr = 2.7;     % [K]
-C_1 = 3.742e8;   % [w * micrometer^4 / m^2      % 2 * pi * h * c^2]
-C_2 = 1.439e4;   % [micrometer * K]             % h * c / k
-sigma = 1.38065e-23; % [J / K]                  % Boltzmann constant
-visible_range_min = 0.4e-6;  % [m]  % bandwidth
-visible_range_max = 0.76e-6; % [m]  % bandwidth   
+% C_1 = 3.742e8;   % [w * micrometer^4 / m^2      % 2 * pi * h * c^2]
+% C_2 = 1.439e4;   % [micrometer * K]             % h * c / k
+% sigma = 1.38065e-23; % [J / K]                  % Boltzmann constant
+% visible_range_min = 0.4e-6;  % [m]  % bandwidth
+% visible_range_max = 0.76e-6; % [m]  % bandwidth   
 
