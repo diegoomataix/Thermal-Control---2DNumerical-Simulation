@@ -19,8 +19,8 @@ A = dx*dy;      % [m^2]
 Vol = dx*dy*dz; % [m^3]
 rho_FR4 = 1850; % [kg/m^3]
     % capacidad termica:
-c_FR4 = 700;     % [J / kg * K]
-c_Cu = 390;      % [J / kg * K]
+c_FR4 = 700
+c_Cu = 390;      % [J / K]
     % Recubrimiento de cobre del PCB por cada lado
 t_rec = 50e-6;  % [m]     % en una de las caras es continuo, y en la otra 
                         % ocupa solo el 10% de la superficie en la cual van 

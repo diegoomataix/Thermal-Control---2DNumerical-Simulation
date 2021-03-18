@@ -8,19 +8,19 @@ Conduccion_NumSim_DATOS
 Conduccion_NumSim_v0
 
 %% Data:        %Change data and see corresponding results
-D=dx;           %Diametre or characteristic transversal dimension [m]
+D=0;            %Diametre or characteristic transversal dimension [m]
 L=dy;           %Length along heat path [m]
-A=pi*D^2/4;     %Area. Direct input, or computed from diameter as A=pi*D^2/4 [m2]
-p=pi*D;         %Perimeter. Direct input, or computed from diameter as p=pi*D [m]
-%k_eff=k_eff;        %Conductivity [W/(m·K)]
+%A=pi*D^2/4;    %Area. Direct input, or computed from diameter as A=pi*D^2/4 [m2]
+% p=pi*D;       %Perimeter. Direct input, or computed from diameter as p=pi*D [m]
+%k_eff=k_eff;   %Conductivity [W/(m·K)]
 c=C_ic;         %Thermal capacity [J/(kg·K)]
-rho=1000;       %Density [kg/m3]
+rho=rho_FR4;    %Density [kg/m3]
 h=2;            %Convective coefficient [W/(m^2·K)], transversal
-eps=0;          %Emissivity, transversal
+eps=emiss;      %Emissivity, transversal
 sigma=5.67e-8;  %S-B constant
-N=20;           %# of elements along L
-M=1e4;          %# of time steps
-Tinf=2.7;       %Ambient temperature [K]
+N=13;           %# of elements along L
+% M=1e4;        %# of time steps
+Tinf=T_cbr;     %Ambient temperature [K]
 tsim=100;       %Total simulation time [s]
 Troot=T_b;      %Root temperature [K] in case it is fixed
 Qroot=0;        %Root heat transfer power [W] in case it is fixed
