@@ -3,7 +3,7 @@
 % ------------------------------------------------------------------------------------
 % Realizado por Diego Mataix Caballero.
 %
-%  ADDITIONAL NOTES:
+% ADDITIONAL NOTES:
 % PCB de FR-4 =: 140 x 100 x 1.5 (dx * dy * dz)
 % Recubrimiento de Cu de 50e-6 m
 %       - en cara 1 : continuo
@@ -20,7 +20,7 @@ Conduccion_NumSim_DATOS
 %___________________________________________________________________________
 %% Choose exercise to run
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-choose = 'd';
+choose = 'd';       % 'a', 'b', 'c', 'd' & 'e' %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %___________________________________________________________________________
 %% Define global parameters
@@ -41,10 +41,11 @@ k_eff_ic = effective(k_vect_ic, l_ic);                      % Effective Conducti
 C_eff_ic = (c_eff *dz + C_ic*dz_ic)/ (dz + dz_ic);          % Thermal Capacity [J / K]
 
 %%% Mesh %%%
-m = 1e4;                                                    % Spatial Subdivisions
+m = 3e1;                                                    % Spatial Subdivisions
 M = 14*m;                                                   % Total n of spatial subdivisions
 x = linspace(0, dx, M);                                     % Spatial Coordinates [m]
-
+N = 9e5;                                                    % # of time steps
+tsim = 4000;                                                % Total simulation time [s]        
 %___________________________________________________________________________
 switch(choose)
 %___________________________________________________________________________
@@ -68,7 +69,7 @@ switch(choose)
                 end
                 T_0 = max(T)                                        % Max T [K]
                 T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
-
+                
                 figure()
                 myplot(x,T)
                 hold on
@@ -148,7 +149,7 @@ switch(choose)
 
                 T_0 = max(T)                                        % Max T [K]
                 T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
-
+                
         %%%% PLOT TEMPERATURE PROFILE
                 figure()
                 hold on
@@ -167,7 +168,7 @@ switch(choose)
 
         p = (2*dy);         % Perimeter [m]
         A = dy * dz;        % Area [m^2]
-        T_avg = 380;        % Average Temperature [m^2]
+        T_avg = 375;        % Average Temperature [K] % from 'a' --> 375K; from 'b' --> 363K
         
         emiss_vect = [emiss_cara emiss_comp];
         p_vect = [dx+dz dx+dz];
@@ -204,10 +205,7 @@ switch(choose)
         %% Apartado D
 
     case 'd'
-        m = 1e0;                                            % Spatial Subdivisions
-        M = 14*m;                                           % Total n of spatial subdivisions
-        % x = linspace(0, dx, M);                           % Spatial Coordinates [m]
-        h=2;            %Convective coefficient [W/(m^2·K)], transversal
+        h=0;                % Convective coefficient [W/(m^2·K)] (NO CONVECTION)
         p = (2*dy);         % Perimeter [m]
         
         % Límites de cada tramo
@@ -224,14 +222,12 @@ switch(choose)
             V(i) = dx * dz * dy;                            % [m^3]
             C(i) = c_eff *rho_FR4*V(i);                     % [J / K]
         end
-        
         %%% IC %%%
         for i = lim(1)+1:lim(2)
             phi(i) = Q_ic / (0.02 * 0.1 * 0.0045);
             k(i) = k_eff_ic;
             A_vect(i) = (dz+dz_ic)*dy;                      % [m^2]
             V(i) = dx * (dz+dz_ic) * dy;                    % [m^3]
-%             C(i) = C_ic;                                  % [J / K]
             C(i) = C_eff_ic;                                % [J / K]
         end
         %%% NO IC %%%
@@ -250,26 +246,19 @@ switch(choose)
             V(i) = dx * (dz+dz_ic) * dy;                    % [m^3]
             C(i) = C_eff_ic;                                % [J / K]
         end
-        
         %%%% TAKE ADVANTAGE OF SYMMETRY
-        phi(((M/2)+1):M) = phi(M/2:-1:1);                  % Mirror vector phi
+        phi(((M/2)+1):M) = phi((M/2):-1:1);                  % Mirror vector phi
         k(((M/2)+1):M) = k(M/2:-1:1);                      % Mirror vector k
         A_vect(((M/2)+1):M) = A_vect(M/2:-1:1);            % Mirror vector A_vect
         V(((M/2)+1):M) = V(M/2:-1:1);                      % Mirror vector V
         C(((M/2)+1):M) = C(M/2:-1:1);                      % Mirror vector C
         
-        %%Inicialization:  % N time % M space
-        N=2e3;                  % # of time steps
-        tsim=5000;               % Total simulation time [s]
+        %%Initialising:         % N time % M space
         Dx=dx/M;                % Element width
-        X=linspace(0,dx,M+1);    % Node position list (equispaced)
+        X=linspace(0,dx,M+1);   % Node position list (equispaced)
         Dt=tsim/N;              % Time step (you might fix it instead of tsim)
         t=linspace(0,tsim,N)';  % Time vector
-        %          Fo=a*Dt/(Dx*Dx)         % Fourier's number
-        %Check for stability of the explicit finite difference method
-        %          disp(['Stability requires 1-Fo*(2+Bi)<0. It actually is =',num2str(1-Fo*(2+Bi))])
-        %          if 1-Fo*(2+Bi)<0 disp('This is unstable; increase number of time steps'), end
-        T=T_box*ones(M,N+1); 	%Temperature-matrix (times from 1 to M, and positions from 1 to N+1)
+        T=T_b*ones(N,M+1); 	% Temperature-matrix (times from 1 to n, and positions from 1 to M+1)
         
         %%% Check for stability of the explicit finite difference method %%
         for i = 1:M
@@ -283,25 +272,22 @@ switch(choose)
         
         %%% Temperature profile equation by means of finite elements methods %%%
         j=1; T(j,:)=T_b;       % Initial temperature profile T(x,t)=0 (assumed uniform)
-        %for j=2:N              % Time advance
-        for it=2:N              % Time advance
+        %T(j,:)
+        for j=2:N              % Time advance
             %i=1; T(j,i)=T_b;   % Left border (base) maintained at T_b
             for i=2:M          % Generic spatial nodes
-                %T(j,i)=T(j-1,i)+(Dt/(rho*c*A(i)))*((k(i)*A_vect(i)*(T(j-1,i+1)-T(j-1,i))-k(i)*A_vect(i)*(T(j-1,i)-T(j-1,i-1))  )/Dx^2+phi(i)*A(i));
-                %T(j,i)=T(j-1,i)+(Dt/((C(i)/V(i))*A_vect(i)))*((k(i)*A_vect(i)*(T(j-1,i+1)-T(j-1,i))-k(i)*A_vect(i)*(T(j-1,i)-T(j-1,i-1)) )/Dx^2+phi(i)*A_vect(i));
-                
-                %T(it,i)=T(it-1,i)+Fo*(T(it-1,i+1)-2*T(it-1,i)+T(it-1,i-1))+Fo*Bi*(Tinf-T(it-1,i))+phi*Dt/(rho*c);
-                T(it,i)=T(it-1,i)+Fo_vect(i)*(T(it-1,i+1)-2*T(it-1,i)+T(it-1,i-1))+Fo_vect(i)*Bi_vect(i)*(T_box-T(it-1,i))+phi(i)*Dt/(C(i)/V(i));
+%                 T(j,i)=T(j-1,i)+(Dt/((C(i)/V(i))*A_vect(i)))*((k(i)*A_vect(i)*(T(j-1,i+1)-T(j-1,i))-k(i)*A_vect(i)*(T(j-1,i)-T(j-1,i-1)) )/Dx^2+phi(i)*A_vect(i));
+                T(j,i)=T(j-1,i)+Fo_vect(i)*(T(j-1,i+1)-2*T(j-1,i)+T(j-1,i-1))+Fo_vect(i)*Bi_vect(i)*(T_box-T(j-1,i))+phi(i)*Dt/(C(i)/V(i));
             end
             %Boundory condition in node 0:
             T(j,1)=T_b;      %if Troot is fixed
             %Boundory condition in node N:
-            T(j,N+1)=T_b;    %if Troot is fixed
-            i=M+1; T(it,i)=T(it-1,i-1); % Right border kept adiabatic
+            T(j,M+1)=T_b;    %if Troot is fixed
+            
         end
-
-        subplot(2,1,1);plot(t,T(:,1:M/10:M+1));xlabel('t [s]'),ylabel('T [K]');title('T(t,x) vs. t at several locations')
-        subplot(2,1,2);plot(X,T(1:N/100:N,:));xlabel('X [m]'),ylabel('T [K]');title('T(t,x) vs. X at several times')
+        max(T(N,:))
+        subplot(2,1,1);myplot(t,T(:,1:M/10:M+1));xlabel('{\it t} [s]'),ylabel('{\it T} [K]');title('{\it T(t,x)} {\it vs}.{\it t} at several locations')
+        subplot(2,1,2);myplot(X,T(1:N/100:N,:));xlabel('{\it X} [m]'),ylabel('{\it T} [K]');title('{\it T(t,x)} {\it vs}.{\it X} at several times')
 %___________________________________________________________________________
         %% Apartado E
         
