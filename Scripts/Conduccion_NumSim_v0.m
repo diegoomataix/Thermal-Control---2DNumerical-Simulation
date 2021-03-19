@@ -254,11 +254,13 @@ switch(choose)
         A_vect(((M/2)+1):M) = A_vect(M/2:-1:1);            % Mirror vector A_vect
         V(((M/2)+1):M) = V(M/2:-1:1);                      % Mirror vector V
         C(((M/2)+1):M) = C(M/2:-1:1);                      % Mirror vector C
-        %         phi(M+1) = phi(M);                                 %
-        %         k(M+1) = k(M);                                     %
-        %         A_vect(M+1) = A_vect(M);                           %
-        %         V(M+1) = V(M);                                     %
-        %         C(M+1) = C(M);                                     %
+        %%% Give a value to the M+1 vector location (needed for temperature
+        %%% equation
+        phi(M+1) = phi(M);                                 
+        k(M+1) = k(M);                                     
+        A_vect(M+1) = A_vect(M);                           
+        V(M+1) = V(M);                                     
+        C(M+1) = C(M);                                     
         
         %%Initialising:         % N time % M space
         Dx=dx/M;                % Element width
@@ -272,8 +274,8 @@ switch(choose)
         
         %%% Check for stability of the explicit finite difference method %%
         for i = 1:M
-            Fo_vect(i)=k(i)/(C(i)/V(i))*Dt/(Dx*Dx);         %Fourier's number
-            Bi_vect(i)=h*p*Dx/(k(i)*A_vect(i)/Dx);          %Biot's number
+            Fo_vect(i)=k(i)/(C(i)/V(i))*Dt/(Dx*Dx);         % Fourier's number
+            Bi_vect(i)=h*p*Dx/(k(i)*A_vect(i)/Dx);          % Biot's number
         end
         Fo = max(Fo_vect);
         Bi = max(Bi_vect);
@@ -284,36 +286,16 @@ switch(choose)
         j=1; T(j,:)=T_b;       % Initial temperature profile T(x,t)=0 (assumed uniform)
         it=M+1; T(:,M+1)=T_b;
         for j=2:N              % Time advance
-            %i=1; T(j,i)=T_b;   % Left border (base) maintained at T_b
-            for i=2:M-1           % Generic spatial nodes
-                %T(j,i)=T(j-1,i)+Fo_vect(i)*(T(j-1,i+1)-2*T(j-1,i)+T(j-1,i-1))...
-                %    +Fo_vect(i)*Bi_vect(i)*(T_box-T(j-1,i))+phi(i)*Dt/(C(i)/V(i));
-                %                T(j,i)=T(j-1,i)+(Dt/((C(i)/V(i))*A_vect(i)))*(( k(i)*A_vect(i)*...
-                %                     (T(j-1,i+1)-T(j-1,i))-k(i)*A_vect(i)*(T(j-1,i)-T(j-1,i-1)) )...
-                %                     /Dx^2+phi(i)*A_vect(i)- p*emiss*stefan_boltz*(T(j-1,i)^4 ...
-                %                     - T_box^4));
-                %                 T(j,i)=T(j-1,i)+(Dt/((C(i)/V(i))*A_vect(i)))*...
-                %                     ((( ((k(i+1)+k(i))/2) * ((A_vect(i)+A_vect(i+1))/2) * (T(j-1,i+1)-T(j-1,i))...
-                %                     - ((k(i)+k(i-1))/2) * ((A_vect(i)+A_vect(i-1))/2) * (T(j-1,i)-T(j-1,i-1)) )...
-                %                     /Dx^2)+(phi(i)*A_vect(i))- (p*(emiss*stefan_boltz*(T(j-1,i)^4 ...
-                %                     - T_box^4))) );
-                
+            i=1; T(j,i)=T_b;   % Left border (base) maintained at T_b
+            for i=2:M          % Generic spatial nodes
                 DtrcA(i) = (Dt/((C(i)/V(i))*A_vect(i)));
                 kALapla(j,i) = (( ((k(i+1)+k(i))/2) * ((A_vect(i)+A_vect(i+1))/2) *...
                     (T(j-1,i+1)-T(j-1,i))- ((k(i)+k(i-1))/2) * ((A_vect(i)+A_vect(i-1))/2) *...
                     (T(j-1,i)-T(j-1,i-1)) )/Dx^2);
-%                 kALapla(j,i) = (( ((k(i))) * ((A_vect(i))) *...
-%                     (T(j-1,i+1)-T(j-1,i))- ((k(i))) * ((A_vect(i))) *...
-%                     (T(j-1,i)-T(j-1,i-1)) )/Dx^2);
                 phDT(j,i) = (p*(emiss*stefan_boltz*(T(j-1,i)^4 - T_box^4)));
                 
                 T(j,i)=T(j-1,i)+(DtrcA(i))*...
                     ((kALapla(j,i))+(phi(i)*A_vect(i))- (phDT(j,i)) );
-                
-                %                 T(j,i) = T(j-1,i) + (Dt/((C(i)/V(i))*A_vect(i)))*...
-                %                     (( (k(i+1)+k(i))/2) * ((A_vect(i)+A_vect(i+1))/2) * (T(j-1,i+1)-T(j-1,i))/(Dx^2)...
-                %                     - (((k(i)+k(i-1))/2) * ((A_vect(i)+A_vect(i-1))/2) * (T(j-1,i)-T(j-1,i-1)))/(Dx^2)...
-                %                     + (phi(i)*A_vect(i)) - (p*(emiss*stefan_boltz*(T(j-1,i)^4 - T_box^4))) );
             end
             %Boundory condition in node 0:
             T(j,1)=T_b;      %if Troot is fixed
