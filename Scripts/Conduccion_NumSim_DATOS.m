@@ -38,6 +38,7 @@ dy_ic = 40e-3;  % [m]
 dx_ic = 20e-3;  % [m]
 dz_ic = 3e-3;   % [m]
 Vol_ic = dx_ic * dy_ic * dz_ic; % [m^3]
+A_ic = (dz+dz_ic)*dy;           % [m^2]
     % dispando:
 Q_ic = 5;       % [W]
 Q_ic_tot = 3 * Q_ic /2;     % [W] (symmetry)

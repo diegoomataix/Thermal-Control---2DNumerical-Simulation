@@ -39,7 +39,10 @@ l_ic =      [t_rec dz_pcb t_rec dz_ic];                     % Dimension Vector [
 k_vect_ic = [k_Cu k_plano (0.1*k_Cu+0.9*k_plano) k_ic];     % Conductivity Vector [W/(m·K)] tercera capa es donde van los IC, cubierta solo al 10% de cobre
 k_eff_ic = effective(k_vect_ic, l_ic);                      % Effective Conductivity [W/(m·K)]
 C_eff_ic = (c_eff *dz + C_ic*dz_ic)/ (dz + dz_ic);          % Thermal Capacity [J / K]
-
+%%% Define the emissivity %%%
+emiss_vect = [emiss_cara emiss_comp];
+p_vect = [dx+dz dx+dz];
+emiss = effective(emiss_vect, p_vect);
 %%% Mesh %%%
 m = 3e1;                                                    % Spatial Subdivisions
 M = 14*m;                                                   % Total n of spatial subdivisions
@@ -59,16 +62,16 @@ switch(choose)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         switch(method)
             case 1
-                DT = 1/8 * ( phi * dx^2 / k_eff );                  % Delta T [K]
-                T_0 = T_b + DT                                      % Max T [K]
-                T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [C]
+                DT = 1/8 * ( phi * dx^2 / k_eff );          % Delta T [K]
+                T_0 = T_b + DT                              % Max T [K]
+                T_0_C = convtemp(T_0, 'K', 'C')             % Max T [C]
             case 2
-                b = b_coef(Q_ic_tot, k_eff, dz*dy);                 % [K*m]
+                b = b_coef(Q_ic_tot, k_eff, dz*dy);         % [K*m]
                 for i = 1:M
                      T(i) = temp_parb(T_b, b, (x(i)), phi, k_eff);  % [K]
                 end
-                T_0 = max(T)                                        % Max T [K]
-                T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
+                T_0 = max(T)                                % Max T [K]
+                T_0_C = convtemp(T_0, 'K', 'C')             % Max T [Celsius]
                 
                 figure()
                 myplot(x,T)
@@ -103,8 +106,8 @@ switch(choose)
         a = T_b;                                            % [K]
         b = b_coef(Q_ic_tot, k_eff, dz*dy);                 % [K*m]
 
-        A_ic = (dz+dz_ic)*dy;                                       % [m^2]
-        phi_ic = Q_ic / (0.02 * 0.1 * 0.0045);                      % Volumetric dissipation [W/m^3]
+        A_ic = (dz+dz_ic)*dy;                               % [m^2]
+        phi_ic = Q_ic / (0.02 * 0.1 * 0.0045);              % Volumetric dissipation [W/m^3]
 
         %%%%%%%%%%%% CALCULATIONS %%%%%%%%%%%%
         %%% SECTION 1: From the PCB border to the start of the 1st IC %%%
@@ -144,13 +147,13 @@ switch(choose)
                     T(i) = T(lim(3));                       % [K]
                 end
         end
-        %%% TAKE ADVANTAGE OF SYMMETRY
-                T(((M/2)+1):M) = T(M/2:-1:1);                       % Mirror curve
+        %%% TAKE ADVANTAGE OF SYMMETRY %%%
+                T(((M/2)+1):M) = T(M/2:-1:1);               % Mirror curve
 
-                T_0 = max(T)                                        % Max T [K]
-                T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
+                T_0 = max(T)                                % Max T [K]
+                T_0_C = convtemp(T_0, 'K', 'C')             % Max T [Celsius]
                 
-        %%%% PLOT TEMPERATURE PROFILE
+        %%% PLOT TEMPERATURE PROFILE %%%
                 figure()
                 hold on
                 myplot(x,T)
@@ -163,16 +166,15 @@ switch(choose)
                 hold off
 %___________________________________________________________________________
         %% Apartado C
-
+        % Considerando que se transmite calor por radiación, con una emisividad media de 0,7 
+        % por el lado de los componentes, y de 0,5 por la cara opuesta, con una caja electrónica 
+        % que se puede suponer negra y a 45 ºC, determinar la temperatura máxima linealizando las
+        % pérdidas radiativas y con disipación uniforme.
     case 'c'
 
         p = (2*dy);         % Perimeter [m]
         A = dy * dz;        % Area [m^2]
         T_avg = 375;        % Average Temperature [K] % from 'a' --> 375K; from 'b' --> 363K
-        
-        emiss_vect = [emiss_cara emiss_comp];
-        p_vect = [dx+dz dx+dz];
-        emiss = effective(emiss_vect, p_vect);
         
         eta = 4*p * stefan_boltz * emiss * T_avg^3;         % Auxiliary function for simplifying the ODE
         
@@ -203,7 +205,7 @@ switch(choose)
         
 %___________________________________________________________________________
         %% Apartado D
-
+        % Resolver el caso anterior pero sin linealizar y con la disipación no uniforme.
     case 'd'
         h=0;                % Convective coefficient [W/(m^2·K)] (NO CONVECTION)
         p = (2*dy);         % Radiative perimeter [m]
@@ -276,9 +278,16 @@ switch(choose)
         for j=2:N              % Time advance
             %i=1; T(j,i)=T_b;   % Left border (base) maintained at T_b
             for i=2:M          % Generic spatial nodes
-%                 T(j,i)=T(j-1,i)+(Dt/((C(i)/V(i))*A_vect(i)))*((k(i)*A_vect(i)*(T(j-1,i+1)-T(j-1,i))-k(i)*A_vect(i)*(T(j-1,i)-T(j-1,i-1)) )/Dx^2+phi(i)*A_vect(i));
-                T(j,i)=T(j-1,i)+Fo_vect(i)*(T(j-1,i+1)-2*T(j-1,i)+T(j-1,i-1))...
-                    +Fo_vect(i)*Bi_vect(i)*(T_box-T(j-1,i))+phi(i)*Dt/(C(i)/V(i));
+                %T(j,i)=T(j-1,i)+Fo_vect(i)*(T(j-1,i+1)-2*T(j-1,i)+T(j-1,i-1))...
+                %    +Fo_vect(i)*Bi_vect(i)*(T_box-T(j-1,i))+phi(i)*Dt/(C(i)/V(i));
+%                 T(j,i)=T(j-1,i)+(Dt/((C(i)/V(i))*A_vect(i)))*((k(i)*A_vect(i)*...
+%                     (T(j-1,i+1)-T(j-1,i))-k(i)*A_vect(i)*(T(j-1,i)-T(j-1,i-1)) )...
+%                     /Dx^2+phi(i)*A_vect(i)- p*emiss*stefan_boltz*(T(j-1,i)^4 ...
+%                     - T_box^4));
+        T(j,i)=T(j-1,i)+(Dt/((C(i)/V(i))*A_vect(i)))*(( (k(i)+k*A_vect(i)*...
+            (T(j-1,i+1)-T(j-1,i))-k(i)*A_vect(i)*(T(j-1,i)-T(j-1,i-1)) )...
+            /Dx^2+phi(i)*A_vect(i)- p*emiss*stefan_boltz*(T(j-1,i)^4 ...
+            - T_box^4));
             end
             %Boundory condition in node 0:
             T(j,1)=T_b;      %if Troot is fixed
@@ -292,8 +301,8 @@ switch(choose)
         subplot(2,1,2);myplot(X,T(1:N/100:N,:));xlabel('{\it X} [m]'),ylabel('{\it T} [K]');title('{\it T(t,x)} {\it vs}.{\it X} at several times')
 %___________________________________________________________________________
         %% Apartado E
-        
-
+        % Resolver el problema térmico bidimensional estacionario y comparar el perfil 
+        % central de temperaturas con el del caso anterior.      
     case 'e'
     %%% Define 2D mesh %%%
     Mx = 1;
@@ -325,6 +334,11 @@ switch(choose)
     end
     
     max(T(N,:,:))
+    %%% PLOT TEMPERATURE PROFILE %%%
+    figure()
+    contourf(X,Y,T(1,i,k))
+    figure()
+    surf(X,Y,T(:,M,:))
 %___________________________________________________________________________
 end
 
