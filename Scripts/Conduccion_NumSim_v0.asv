@@ -32,23 +32,25 @@ k_eff = effective(k_vect, l);                       % Effective Conductivity [W/
 L = dx/2;                                           % [m]
 A = dy * dz;                                        % [m^2]
 c_eff = (c_Cu*dx*t_rec + c_FR4*dz_pcb + c_Cu*t_rec) / (t_rec + dz_pcb + 0.1*t_rec);  % Thermal Capacity [J / K]
-% c_eff = effective(
+C_eff = c_eff * rho_FR4 * dx*dz*dy;
 
 %%% Define the parameters for the sections containing the IC %%%
 l_ic =      [t_rec dz_pcb t_rec dz_ic];                     % Dimension Vector [m]
 k_vect_ic = [k_Cu k_plano (0.1*k_Cu+0.9*k_plano) k_ic];     % Conductivity Vector [W/(m·K)] tercera capa es donde van los IC, cubierta solo al 10% de cobre
 k_eff_ic = effective(k_vect_ic, l_ic);                      % Effective Conductivity [W/(m·K)]
-C_eff_ic = (c_eff *dz + C_ic*dz_ic)/ (dz + dz_ic);          % Thermal Capacity [J / K]
+C_eff_ic = (C_eff *dz + C_ic*dz_ic)/ (dz + dz_ic);          % Thermal Capacity [J / K]
 %%% Define the emissivity %%%
 emiss_vect = [emiss_cara emiss_comp];
 p_vect = [dx+dz dx+dz];
 emiss = effective(emiss_vect, p_vect);
 %%% Mesh %%%
-m = 3e1;                                                    % Spatial Subdivisions
+m = 8e0;                                                    % Spatial Subdivisions
 M = 14*m;                                                   % Total n of spatial subdivisions
 x = linspace(0, dx, M);                                     % Spatial Coordinates [m]
 N = 9e5;                                                    % # of time steps
-tsim = 4000;                                                % Total simulation time [s]        
+%N = 2e6;                                                    % # of time steps
+%tsim = 1400;                                                % Total simulation time [s]
+tsim = 4000;                                                % Total simulation time [s]
 %___________________________________________________________________________
 switch(choose)
 %___________________________________________________________________________
@@ -72,7 +74,7 @@ switch(choose)
                 end
                 T_0 = max(T)                                % Max T [K]
                 T_0_C = convtemp(T_0, 'K', 'C')             % Max T [Celsius]
-                
+
                 figure()
                 myplot(x,T)
                 hold on
@@ -152,7 +154,7 @@ switch(choose)
 
                 T_0 = max(T)                                % Max T [K]
                 T_0_C = convtemp(T_0, 'K', 'C')             % Max T [Celsius]
-                
+
         %%% PLOT TEMPERATURE PROFILE %%%
                 figure()
                 hold on
@@ -166,8 +168,8 @@ switch(choose)
                 hold off
 %___________________________________________________________________________
         %% Apartado C
-        % Considerando que se transmite calor por radiación, con una emisividad media de 0,7 
-        % por el lado de los componentes, y de 0,5 por la cara opuesta, con una caja electrónica 
+        % Considerando que se transmite calor por radiación, con una emisividad media de 0,7
+        % por el lado de los componentes, y de 0,5 por la cara opuesta, con una caja electrónica
         % que se puede suponer negra y a 45 ºC, determinar la temperatura máxima linealizando las
         % pérdidas radiativas y con disipación uniforme.
     case 'c'
@@ -175,22 +177,22 @@ switch(choose)
         p = (2*dy);         % Perimeter [m]
         A = dy * dz;        % Area [m^2]
         T_avg = 375;        % Average Temperature [K] % from 'a' --> 375K; from 'b' --> 363K
-        
+
         eta = 4*p * stefan_boltz * emiss * T_avg^3;         % Auxiliary function for simplifying the ODE
-        
+
         lambda = sqrt( eta / ( (k_eff * A) ) )                                  % Eigenvalues of the ODE
         c2 = (T_b - T_box - ( (phi * A) / eta ) / (1+exp(-lambda *dx)) )        % Coef. of the ODE
         c1 = c2*exp(-lambda*dx)                                                 % Coef. of the ODE
-        
+
         % Temperature profile, the expression is found by solving the ODE
         % and applying the BC.
         for i = 1:M
             T(i) = c1* exp(lambda * x(i) ) + c2*exp(-lambda * x(i) ) + T_box + ( (phi*A)/eta);  % [K]
         end
-        
+
         T_0 = max(T)                                        % Max T [K]
         T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
-        
+
         %%% PLOT TEMPERATURE PROFILE %%%
         figure()
         hold on
@@ -202,31 +204,38 @@ switch(choose)
         yline(T_b, '--')
         yline(T_0, '--')
         hold off
-        
+
 %___________________________________________________________________________
         %% Apartado D
         % Resolver el caso anterior pero sin linealizar y con la disipación no uniforme.
     case 'd'
         h=0;                % Convective coefficient [W/(m^2·K)] (NO CONVECTION)
         p = (2*dy);         % Radiative perimeter [m]
-        
-        % Límites de cada tramo
+
+        %%% Limits for each segment %%%
         for i = 1:6
-            lim(i) = 2*i*m;                                 % [m]
+            lim(i) = 2*i*m;
         end
-        
-        % Definir los vectores para representar las discontinuidades
+
+        %%% Definir los vectores para representar las discontinuidades %%%
+        % Initialising
+        phi = ones(1,M+1);
+        k = ones(1,M+1);
+        A_vect = ones(1,M+1);
+        V = ones(1,M+1);
+        C = ones(1,M+1);
         %%% NO IC %%%
-        for i = 1:lim(1) 
+        for i = 1:lim(1)
             phi(i) = 0;
             k(i) = k_eff;
             A_vect(i) = A;                                  % [m^2]
             V(i) = dx * dz * dy;                            % [m^3]
-            C(i) = c_eff *rho_FR4*V(i);                     % [J / K]
+            C(i) = C_eff;                                   % [J / K]
         end
         %%% IC %%%
         for i = lim(1)+1:lim(2)
             phi(i) = Q_ic / (0.02 * 0.1 * 0.0045);
+%             phi(i) = Q_ic_tot / (0.02 * 0.1 * 0.0045);
             k(i) = k_eff_ic;
             A_vect(i) = (dz+dz_ic)*dy;                      % [m^2]
             V(i) = dx * (dz+dz_ic) * dy;                    % [m^3]
@@ -238,11 +247,12 @@ switch(choose)
             k(i) = k_eff;
             A_vect(i) = A;                                  % [m^2]
             V(i) = dx * dz * dy;                            % [m^3]
-            C(i) = c_eff *rho_FR4*V(i);                     % [J / K]
+            C(i) = C_eff;                                   % [J / K]
         end
         %%% IC %%%
         for i = (lim(3)+1): (M/2)
             phi(i) = Q_ic / (0.02 * 0.1 * 0.0045);
+%             phi(i) = (Q_ic/2) / (0.02 * 0.1 * 0.0045);
             k(i) = k_eff_ic;
             A_vect(i) = (dz+dz_ic)*dy;                      % [m^2]
             V(i) = dx * (dz+dz_ic) * dy;                    % [m^3]
@@ -254,89 +264,196 @@ switch(choose)
         A_vect(((M/2)+1):M) = A_vect(M/2:-1:1);            % Mirror vector A_vect
         V(((M/2)+1):M) = V(M/2:-1:1);                      % Mirror vector V
         C(((M/2)+1):M) = C(M/2:-1:1);                      % Mirror vector C
-        
+        %%% Give a value to the M+1 vector location (needed for temperature
+        %%% equation
+        phi(M+1) = phi(M);
+        k(M+1) = k(M);
+        A_vect(M+1) = A_vect(M);
+        V(M+1) = V(M);
+        C(M+1) = C(M);
+
         %%Initialising:         % N time % M space
         Dx=dx/M;                % Element width
         X=linspace(0,dx,M+1);   % Node position list (equispaced)
         Dt=tsim/N;              % Time step (you might fix it instead of tsim)
         t=linspace(0,tsim,N)';  % Time vector
+        DtrcA = ones(1,M);
+        kALapla = ones(N,M+1);
+        phDT = ones(N,M+1);
         T=T_b*ones(N,M+1); 	% Temperature-matrix (times from 1 to n, and positions from 1 to M+1)
-        
+
         %%% Check for stability of the explicit finite difference method %%
         for i = 1:M
-        Fo_vect(i)=k(i)/(C(i)/V(i))*Dt/(Dx*Dx);         %Fourier's number
-        Bi_vect(i)=h*p*Dx/(k(i)*A_vect(i)/Dx);          %Biot's number
+            Fo_vect(i)=k(i)/(C(i)/V(i))*Dt/(Dx*Dx);         % Fourier's number
+            Bi_vect(i)=h*p*Dx/(k(i)*A_vect(i)/Dx);          % Biot's number
         end
-        Fo = max(Fo_vect)
-        Bi = max(Bi_vect)
+        Fo = max(Fo_vect);
+        Bi = max(Bi_vect);
         disp(['Stability requires 1-Fo*(2+Bi)<0. It actually is =',num2str(1-Fo*(2+Bi))])
         if 1-Fo*(2+Bi)<0 disp('This is unstable; increase number of time steps'), end
-        
+
         %%% Temperature profile equation by means of finite elements methods %%%
         j=1; T(j,:)=T_b;       % Initial temperature profile T(x,t)=0 (assumed uniform)
-        %T(j,:)
+        it=M+1; T(:,M+1)=T_b;
         for j=2:N              % Time advance
-            %i=1; T(j,i)=T_b;   % Left border (base) maintained at T_b
+            i=1; T(j,i)=T_b;   % Left border (base) maintained at T_b
             for i=2:M          % Generic spatial nodes
-                %T(j,i)=T(j-1,i)+Fo_vect(i)*(T(j-1,i+1)-2*T(j-1,i)+T(j-1,i-1))...
-                %    +Fo_vect(i)*Bi_vect(i)*(T_box-T(j-1,i))+phi(i)*Dt/(C(i)/V(i));
-%                 T(j,i)=T(j-1,i)+(Dt/((C(i)/V(i))*A_vect(i)))*((k(i)*A_vect(i)*...
-%                     (T(j-1,i+1)-T(j-1,i))-k(i)*A_vect(i)*(T(j-1,i)-T(j-1,i-1)) )...
-%                     /Dx^2+phi(i)*A_vect(i)- p*emiss*stefan_boltz*(T(j-1,i)^4 ...
-%                     - T_box^4));
-        T(j,i)=T(j-1,i)+(Dt/((C(i)/V(i))*A_vect(i)))*(( (k(i)+k*A_vect(i)*...
-            (T(j-1,i+1)-T(j-1,i))-k(i)*A_vect(i)*(T(j-1,i)-T(j-1,i-1)) )...
-            /Dx^2+phi(i)*A_vect(i)- p*emiss*stefan_boltz*(T(j-1,i)^4 ...
-            - T_box^4));
+                DtrcA(i) = (Dt/((C(i)/V(i))*A_vect(i)));
+                kALapla(j,i) = (( ((k(i+1)+k(i))/2) * ((A_vect(i)+A_vect(i+1))/2) *...
+                    (T(j-1,i+1)-T(j-1,i))- ((k(i)+k(i-1))/2) * ((A_vect(i)+A_vect(i-1))/2) *...
+                    (T(j-1,i)-T(j-1,i-1)) )/Dx^2);
+                phDT(j,i) = (p*(emiss*stefan_boltz*(T(j-1,i)^4 - T_box^4)));
+
+                T(j,i)=T(j-1,i)+(DtrcA(i))*...
+                    ((kALapla(j,i))+(phi(i)*A_vect(i))- (phDT(j,i)) );
             end
             %Boundory condition in node 0:
             T(j,1)=T_b;      %if Troot is fixed
             %Boundory condition in node N:
             T(j,M+1)=T_b;    %if Troot is fixed
-            
         end
         %%% PLOT TEMPERATURE PROFILE %%%
-        max(T(N,:))
+        T_0 =  max(T(N,:))                                  % Max T [K]
+        T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
         subplot(2,1,1);myplot(t,T(:,1:M/10:M+1));xlabel('{\it t} [s]'),ylabel('{\it T} [K]');title('{\it T(t,x)} {\it vs}.{\it t} at several locations')
         subplot(2,1,2);myplot(X,T(1:N/100:N,:));xlabel('{\it X} [m]'),ylabel('{\it T} [K]');title('{\it T(t,x)} {\it vs}.{\it X} at several times')
 %___________________________________________________________________________
         %% Apartado E
-        % Resolver el problema térmico bidimensional estacionario y comparar el perfil 
-        % central de temperaturas con el del caso anterior.      
+        % Resolver el problema térmico bidimensional estacionario y comparar el perfil
+        % central de temperaturas con el del caso anterior.
     case 'e'
-    %%% Define 2D mesh %%%
-    Mx = 1;
-    My = 1;
-    
-    %%% Initialise %%%
-    T = T_b*ones(N,Mx+1,My+1)
-    
-    %%% Bidimensional temperature profile equation by means of finite elements methods %%%
-    for j = 2:N
-        for i = 2:Mx
-            for k = 2:My
-                T(j,i,k) = T(j-1,i,k) + ((Dt*Vxy(i,k))/(C_effxy(i,k)*zxy(i,k)*...
-                    (((k_effxy(i+1,k)+k_effxy(i,k))/2)*((zxy(i+1,k)+zxy(i,k))/2)*(T(j-1,i+1,k) - ...
-                    T(j-1,i,k))/(Dx^2) - ((k_effxy(i,k)+k_effxy(i-1,k))/2)*(zxy(i,k)+zxy(i-1,k))/2)*...
-                    T(j-1,i,k) - T(j-1,i-1,k))/(Dx^2) + ((k_effxy(i,k+1)+k_effxy(i,k))/2)...
-                    *((zxy(i,k+1)+zxy(i,k))/2)*(T(j-1,i,k+1)-T(j-1,i,k))/(Dy^2) -...
-                    ((k_effxy(i,k)+k_effxy(i,k-1))/2)*((zxy(i,k)+zxy(i,k-1))/2)*(T(j-1,i,k) -...
-                    T(j-1,i,k-1))/(Dy^2) + phixy(i,k)*zxy(i,k) - (emiss)*...
-                    stefan_boltz*(T(j-1,i,k)^4 - T_box^4));
-                %Boundory condition in x-nodes 0 and Nx+1:
-                T(j,1,k) = T_b;
-                T(j,Nx+1,k) = T_b;
-                %Boundory condition in y-nodes 0 and Ny+1:
-                T(j,i,1) = T(j,i,2);
-                T(j,i,Ny+1) = T(j,i,Ny);
+        %%% Define 2D mesh %%%
+        m = 4e1;                % Spatial Subdivisions
+        Mx = 14*m;              % Total n of spatial subdivisions (x-direction)
+        my = 1e0;               % Spatial Subdivisions (y-direction)
+        My = 10*my;             % Total n of spatial subdivisions (y-direction)
+        %%% Initialise %%%
+        Dx=dx/Mx;               % Element width (x-direction)
+        Dy=dy/My;               % Element width (y-direction)
+        X=linspace(0,dx,Mx+1);  % Node position list (equispaced) (x-direction)
+        Y=linspace(0,dy,My+1);  % Node position list (equispaced) (y-direction)
+        Dt=tsim/N;              % Time step (you might fix it instead of tsim)
+        t=linspace(0,tsim,N)';  % Time vector
+        T = T_b*ones(N,Mx+1,My+1);
+
+        %%% Definir los vectores para representar las discontinuidades %%%
+        % Initialising
+        phixy = ones(Mx+1,My+1);
+        k_effxy = ones(Mx+1,My+1);
+        zxy = ones(Mx+1,My+1);
+        Vxy = ones(Mx+1,My+1);
+        C_effxy = ones(Mx+1,My+1);
+
+        %%% Limits for each segment %%%
+        for i = 1:6
+            limx(i) = 2*i*m;
+        end
+        for i = 1:10
+            limy(i) = 1*i*my;
+        end
+
+        %%%%% x-direction %%%%%
+        %%% NO IC SEGMENTS %%%
+        for i = 1:(Mx/2)
+            for k = 1:limy(3)
+                phixy(i,k) = ;
+                k_effxy(i,k) = ;
+                zxy(i,k) = ;
+                Vxy(i,k) = ;
+                C_effxy(i,k) = ;
             end
         end
-    end
-    
-    max(T(N,:,:))
+        for i = 1:limx(1)
+            for k = limy(3):(My/2)
+                phixy(i,k) = ;
+                k_effxy(i,k) = ;
+                zxy(i,k) = ;
+                Vxy(i,k) = ;
+                C_effxy(i,k) = ;
+            end
+        end
+        for i = limx(2)+1:limx(3)
+            for k = limy(3):(My/2)
+                phixy(i,k) = ;
+                k_effxy(i,k) = ;
+                zxy(i,k) = ;
+                Vxy(i,k) = ;
+                C_effxy(i,k) = ;
+            end
+        end
+        %%% IC SEGMENTS %%%
+        for i = limx(1)+1:limx(2)
+            for k = limy(3):(My/2)
+                phixy(i,k) = ;
+                k_effxy(i,k) = ;
+                zxy(i,k) = ;
+                Vxy(i,k) = ;
+                C_effxy(i,k) = ;
+            end
+        end
+        for i = limx(3)+1:(Mx/2)
+            for k = limy(3):(My/2)
+                phixy(i,k) = ;
+                k_effxy(i,k) = ;
+                zxy(i,k) = ;
+                Vxy(i,k) = ;
+                C_effxy(i,k) = ;
+            end
+        end
+        %             phi(i) = Q_ic / (0.02 * 0.1 * 0.0045);
+        %             k(i) = k_eff_ic;
+        %             A_vect(i) = (dz+dz_ic)*dy;                      % [m^2]
+        %             V(i) = dx * (dz+dz_ic) * dy;                    % [m^3]
+        %             C(i) = C_eff_ic;                                % [J / K]
+        
+        %             phi(i) = 0;
+        %             k(i) = k_eff;
+        %             A_vect(i) = A;                                  % [m^2]
+        %             V(i) = dx * dz * dy;                            % [m^3]
+        %             C(i) = C_eff;                                   % [J / K]
+        %%%% TAKE ADVANTAGE OF SYMMETRY
+        %         phi(((M/2)+1):M) = phi((M/2):-1:1);                % Mirror vector phi
+        %         k(((M/2)+1):M) = k(M/2:-1:1);                      % Mirror vector k
+        %         A_vect(((M/2)+1):M) = A_vect(M/2:-1:1);            % Mirror vector A_vect
+        %         V(((M/2)+1):M) = V(M/2:-1:1);                      % Mirror vector V
+        %         C(((M/2)+1):M) = C(M/2:-1:1);                      % Mirror vector C
+        phixy( ( ( (Mx/2)+1):Mx), 1:(My/2)) =   phixy( ( ( (Mx/2)+1):-1:1), 1:(My/2));
+        phixy( ( ( (Mx/2)+1):Mx), 1:(My/2)) =   phixy( ( ( (Mx/2)+1):-1:1), 1:(My/2));
+        k_effxy( ( ( (Mx/2)+1):Mx), 1:(My/2)) =   k_effxy( ( ( (Mx/2)+1):-1:1), 1:(My/2));
+        zxy(i,k) = ;
+        Vxy(i,k) = ;
+        C_effxy(i,k) = ;
+
+
+
+        %%% Bidimensional temperature profile equation by means of finite elements methods %%%
+        j=1; T(j,:,:)=T_b;       % Initial temperature profile T(x,t)=0 (assumed uniform)
+        %it=M+1; T(:,M+1)=T_b;
+        for j = 2:N
+            for i = 2:Mx
+                for k = 2:My
+                    T(j,i,k) = T(j-1,i,k) + ((Dt*Vxy(i,k))/(C_effxy(i,k)*zxy(i,k)*...
+                        (((k_effxy(i+1,k)+k_effxy(i,k))/2)*((zxy(i+1,k)+zxy(i,k))/2)*(T(j-1,i+1,k) - ...
+                        T(j-1,i,k))/(Dx^2) - ((k_effxy(i,k)+k_effxy(i-1,k))/2)*(zxy(i,k)+zxy(i-1,k))/2)*...
+                        T(j-1,i,k) - T(j-1,i-1,k))/(Dx^2) + ((k_effxy(i,k+1)+k_effxy(i,k))/2)...
+                        *((zxy(i,k+1) + zxy(i,k))/2)*(T(j-1,i,k+1)-T(j-1,i,k))/(Dy^2) -...
+                        ((k_effxy(i,k)+k_effxy(i,k-1))/2)*((zxy(i,k)+zxy(i,k-1))/2)*(T(j-1,i,k) -...
+                        T(j-1,i,k-1))/(Dy^2) + phixy(i,k)*zxy(i,k) - (emiss)*...
+                        stefan_boltz*(T(j-1,i,k)^4 - T_box^4));
+                    %Boundory condition in x-nodes 0 and Nx+1:
+                    T(j,1,k) = T_b;
+                    T(j,Mx+1,k) = T_b;
+                    %Boundory condition in y-nodes 0 and Ny+1:
+                    T(j,i,1) = T(j,i,2);
+                    T(j,i,My+1) = T(j,i,My);
+                end
+            end
+        end
+
+    max(T(N,:,:));
     %%% PLOT TEMPERATURE PROFILE %%%
-    figure()
-    contourf(X,Y,T(1,i,k))
+%     figure()
+%     contourf(X,Y,T(1,:,:))
     figure()
     surf(X,Y,T(:,M,:))
 %___________________________________________________________________________
