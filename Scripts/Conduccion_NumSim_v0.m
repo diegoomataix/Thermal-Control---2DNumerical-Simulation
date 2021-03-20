@@ -47,10 +47,10 @@ emiss = effective(emiss_vect, p_vect);
 m = 8e0;                                                    % Spatial Subdivisions
 M = 14*m;                                                   % Total n of spatial subdivisions
 x = linspace(0, dx, M);                                     % Spatial Coordinates [m]
-N = 9e5;                                                    % # of time steps
-%N = 1e6;                                                    % # of time steps
-%tsim = 1400;                                                % Total simulation time [s]
-tsim = 4000;                                                % Total simulation time [s]
+%N = 9e5;                                                   % # of time steps
+N = 2e5;                                                    % # of time steps
+%tsim = 1400;                                               % Total simulation time [s]
+tsim = 3000;                                                % Total simulation time [s]
 %___________________________________________________________________________
 switch(choose)
 %___________________________________________________________________________
@@ -323,10 +323,12 @@ switch(choose)
         % central de temperaturas con el del caso anterior.
     case 'e'
         %%% Define 2D mesh %%%
-        m = 3e0;                % Spatial Subdivisions
+        m = 5e0;                % Spatial Subdivisions
         Mx = 14*m;              % Total n of spatial subdivisions (x-direction)
         my = 3e0;               % Spatial Subdivisions (y-direction)
         My = 12*my;             % Total n of spatial subdivisions (y-direction)
+        N = 3e5;                % # of time steps
+        tsim = 2800;            % Total simulation time [s]
         %%% Initialise %%%
         Dx=dx/Mx;               % Element width (x-direction)
         Dy=dy/My;               % Element width (y-direction)
@@ -463,7 +465,8 @@ switch(choose)
             end
         end
 
-        max(T(N,:,:));
+        T_0 =  max(max(max(T)))                             % Max T [K]
+        T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
         %%% PLOT TEMPERATURE PROFILE %%%
         % Define temperature for easy plotting
         T_stat = T(N,:,:);
