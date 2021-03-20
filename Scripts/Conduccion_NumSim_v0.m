@@ -323,9 +323,9 @@ switch(choose)
         % central de temperaturas con el del caso anterior.
     case 'e'
         %%% Define 2D mesh %%%
-        m = 1e0;                % Spatial Subdivisions
+        m = 3e0;                % Spatial Subdivisions
         Mx = 14*m;              % Total n of spatial subdivisions (x-direction)
-        my = 1e0;               % Spatial Subdivisions (y-direction)
+        my = 3e0;               % Spatial Subdivisions (y-direction)
         My = 12*my;             % Total n of spatial subdivisions (y-direction)
         %%% Initialise %%%
         Dx=dx/Mx;               % Element width (x-direction)
@@ -334,6 +334,10 @@ switch(choose)
         Y=linspace(0,dy,My+1);  % Node position list (equispaced) (y-direction)
         Dt=tsim/N;              % Time step (you might fix it instead of tsim)
         t=linspace(0,tsim,N)';  % Time vector
+        Dtrcz=ones(Mx+1,My+1);
+        kzLaplx=ones(N,Mx+1,My+1);
+        kzLaply=ones(N,Mx+1,My+1);
+        hDT=ones(N,Mx+1,My+1);
         T = T_b*ones(N,Mx+1,My+1);
 
         % Redefine the radiative Perimeter
@@ -422,10 +426,11 @@ switch(choose)
 
         for i = 1:Mx
             for k = 1:My
-                Fo_vect(i,k)=k_effxy(i,k)/(C_effxy(i,k)/Vxy(i,k))*Dt/(Dx*Dx);   % Fourier's number
+                Fo_vectx(i,k)=k_effxy(i,k)/(C_effxy(i,k)/Vxy(i,k))*Dt/(Dx*Dx);   % Fourier's number
+                Fo_vecty(i,k)=k_effxy(i,k)/(C_effxy(i,k)/Vxy(i,k))*Dt/(Dy*Dy);   % Fourier's number
             end
         end
-        Fo =  max(max(Fo_vect))
+        Fo =  max(max(max(Fo_vectx)), max(max(Fo_vecty)))
         Bi =0;
         disp(['Stability requires 1-Fo*(2+Bi)<0. It actually is =',num2str(1-Fo*(2+Bi))])
         if 1-Fo*(2+Bi)<0 disp('This is unstable; increase number of time steps'), end
@@ -436,14 +441,18 @@ switch(choose)
         for j = 2:N
             for i = 2:Mx
                 for k = 2:My
-                    T(j,i,k) = T(j-1,i,k) + ((Dt*Vxy(i,k))/(C_effxy(i,k)*zxy(i,k)*...
-                        (((k_effxy(i+1,k)+k_effxy(i,k))/2)*((zxy(i+1,k)+zxy(i,k))/2)*(T(j-1,i+1,k) - ...
-                        T(j-1,i,k))/(Dx^2) - ((k_effxy(i,k)+k_effxy(i-1,k))/2)*(zxy(i,k)+zxy(i-1,k))/2)*...
-                        T(j-1,i,k) - T(j-1,i-1,k))/(Dx^2) + ((k_effxy(i,k+1)+k_effxy(i,k))/2)...
-                        *((zxy(i,k+1) + zxy(i,k))/2)*(T(j-1,i,k+1)-T(j-1,i,k))/(Dy^2) -...
-                        ((k_effxy(i,k)+k_effxy(i,k-1))/2)*((zxy(i,k)+zxy(i,k-1))/2)*(T(j-1,i,k) -...
-                        T(j-1,i,k-1))/(Dy^2) + phixy(i,k)*zxy(i,k) - (emiss)*...
-                        stefan_boltz*(T(j-1,i,k)^4 - T_box^4));
+                    Dtrcz(i,k)=(Dt*Vxy(i,k))/(C_effxy(i,k)*zxy(i,k));
+                    kzLaplx(j,i,k)=((k_effxy(i+1,k)+k_effxy(i,k))/2)*((zxy(i+1,k)+zxy(i,k))/2)*((T(j-1,i+1,k) - ...
+                                    T(j-1,i,k))/(Dx^2)) - ((k_effxy(i,k)+k_effxy(i-1,k))/2)*((zxy(i,k)+zxy(i-1,k))/2)*...
+                                    ((T(j-1,i,k) - T(j-1,i-1,k))/(Dx^2));
+                    kzLaply(j,i,k)=((k_effxy(i,k+1)+k_effxy(i,k))/2)...
+                                    *((zxy(i,k+1) + zxy(i,k))/2)*((T(j-1,i,k+1)-T(j-1,i,k))/(Dy^2)) -...
+                                    ((k_effxy(i,k)+k_effxy(i,k-1))/2)*((zxy(i,k)+zxy(i,k-1))/2)*((T(j-1,i,k) -...
+                                    T(j-1,i,k-1))/(Dy^2));
+                    hDT(j,i,k)=(emiss)*stefan_boltz*(T(j-1,i,k)^4 - T_box^4);
+
+                    T(j,i,k) = T(j-1,i,k) + (Dtrcz(i,k))*...
+                        ((kzLaplx(j,i,k)) + (kzLaply(j,i,k)) + phixy(i,k)*zxy(i,k) - (hDT(j,i,k)));
                     %Boundory condition in x-nodes 0 and Nx+1:
                     T(j,1,k) = T_b;
                     T(j,Mx+1,k) = T_b;
