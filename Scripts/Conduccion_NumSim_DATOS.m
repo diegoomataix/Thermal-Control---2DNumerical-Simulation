@@ -17,7 +17,7 @@ dz_pcb = 1.4e-3;% [m]
 dz_cu = (dz - dz_pcb)/2;% [m]
 A = dx*dy;      % [m^2]
 Vol = dx*dy*dz; % [m^3]
-rho_FR4 = 1850; % [kg/m^3]
+rho_FR4 = 2100; % [kg/m^3]
     % capacidad termica:
 c_FR4 = 700;     % [J / kg * K]
 c_Cu = 390;      % [J / kg * K]

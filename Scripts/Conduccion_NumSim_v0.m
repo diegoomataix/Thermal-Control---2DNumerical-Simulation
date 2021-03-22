@@ -32,7 +32,6 @@ k_eff = effective(k_vect, l);                       % Effective Conductivity [W/
 L = dx/2;                                           % [m]
 A = dy * dz;                                        % [m^2]
 c_eff = (c_Cu*t_rec + c_FR4*dz_pcb + (0.1*c_Cu*t_rec)) / (t_rec + dz_pcb + 0.1*t_rec);  % Thermal Capacity [J / K]
-rho_FR4 = 2100; %%%% QUITAR
 C_eff = c_eff * rho_FR4 * dx*dz*dy;
 
 %%% Define the parameters for the sections containing the IC %%%
@@ -324,12 +323,12 @@ switch(choose)
     case 'e'
         phi = (Q_ic) / ((dz+dz_ic)*dy_ic*dx_ic);                             % Volumetric dissipation [W/m^3]
         %%% Define 2D mesh %%%
-        m =5e0;                % Spatial Subdivisions                              % 5e0 works
+        m =7e0;                 % Spatial Subdivisions                              % 5e0 works
         Mx = 14*m;              % Total n of spatial subdivisions (x-direction)
-        my = 5e0;               % Spatial Subdivisions (y-direction)                % 3e0 works
+        my = 7e0;               % Spatial Subdivisions (y-direction)                % 3e0 works
         My = 10*my;             % Total n of spatial subdivisions (y-direction)
         N = 1.9e5;                % # of time steps                                   % 3e5 works
-        tsim = 800;            % Total simulation time [s]                         % 2800 works
+        tsim = 750;             % Total simulation time [s]                         % 2800 works
         %%% Initialise %%%
         Dx=dx/Mx;               % Element width (x-direction)
         Dy=dy/My;               % Element width (y-direction)
@@ -452,19 +451,6 @@ switch(choose)
         for j = 2:N              %
             for i = 2:Mx
                 for k = 2:My
-%                     Dtrcz(i,k)=(Dt*V2d(i,k))/(C(i,k)*z(i,k));
-%                     kzLaplx(j,i,k)=((k_effxy(i,k)+k_effxy(i+1,k))/2)*((z(i,k)+z(i+1,k))/2)*((T(j-1,i+1,k) - ...
-%                                     T(j-1,i,k))/(Dx^2)) - ((k_effxy(i,k)+k_effxy(i-1,k))/2)*((z(i,k)+z(i-1,k))/2)*...
-%                                     ((T(j-1,i,k) - T(j-1,i-1,k))/(Dx^2));
-%                     kzLaply(j,i,k)=((k_effxy(i,k)+k_effxy(i,k+1))/2)...
-%                                     *((z(i,k) + z(i,k+1))/2)*((T(j-1,i,k+1)-T(j-1,i,k))/(Dy^2)) -...
-%                                     ((k_effxy(i,k)+k_effxy(i,k-1))/2)*((z(i,k)+z(i,k-1))/2)*((T(j-1,i,k) -...
-%                                     T(j-1,i,k-1))/(Dy^2));
-%                     hDT(j,i,k)=(emiss_cara+emiss_comp)*stefan_boltz*(T(j-1,i,k)^4 - T_box^4);
-%
-%                     T(j,i,k) = T(j-1,i,k) + (Dtrcz(i,k))*...
-%                         ((kzLaplx(j,i,k)) + (kzLaply(j,i,k)) + phi2d(i,k)*z(i,k) - (hDT(j,i,k)));
-
                     T(j,i,k)= T(j-1,i,k) + ((Dt*V2d(i,k)) / (C(i,k)*z(i,k))) * ...
                     ( (((k_effxy(i,k)+k_effxy(i+1,k))/2)*((z(i,k)+z(i+1,k))/2)*...
                                     ( (T(j-1,i+1,k)-T(j-1,i,k) ) / (Dx^2) ) - ...
