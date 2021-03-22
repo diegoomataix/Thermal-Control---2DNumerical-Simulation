@@ -326,10 +326,10 @@ switch(choose)
         %%% Define 2D mesh %%%
         m =5e0;                % Spatial Subdivisions                              % 5e0 works
         Mx = 14*m;              % Total n of spatial subdivisions (x-direction)
-        my = 4e0;               % Spatial Subdivisions (y-direction)                % 3e0 works
-        My = 12*my;             % Total n of spatial subdivisions (y-direction)
-        N = 4e5;                % # of time steps                                   % 3e5 works
-        tsim = 1000;            % Total simulation time [s]                         % 2800 works
+        my = 5e0;               % Spatial Subdivisions (y-direction)                % 3e0 works
+        My = 10*my;             % Total n of spatial subdivisions (y-direction)
+        N = 1.9e5;                % # of time steps                                   % 3e5 works
+        tsim = 800;            % Total simulation time [s]                         % 2800 works
         %%% Initialise %%%
         Dx=dx/Mx;               % Element width (x-direction)
         Dy=dy/My;               % Element width (y-direction)
@@ -341,7 +341,7 @@ switch(choose)
 %         kzLaplx=ones(N,Mx+1,My+1);
 %         kzLaply=ones(N,Mx+1,My+1);
 %         hDT=ones(N,Mx+1,My+1);
-        T = T_b*ones(N,Mx+1,My+1);
+        T = T_b*ones(N,Mx+1,My+1); % Initial temperature profile T(x,t)=T_b (assumed uniform)
 
         % Redefine the radiative Perimeter
 %         p = (2*dy) + (2*dx);
@@ -362,7 +362,7 @@ switch(choose)
 
         %%% NO IC SEGMENTS %%%
         for i = 1:(Mx/2)
-            for k = 1:limy(4)
+            for k = 1:limy(3)
                 phi2d(i,k) = 0;
                 k_effxy(i,k) = k_eff;
                 z(i,k) = dz;
@@ -371,7 +371,7 @@ switch(choose)
             end
         end
         for i = 1:limx(1)
-            for k = limy(4):(My/2)
+            for k = limy(3):(My/2)
                 phi2d(i,k) = 0;
                 k_effxy(i,k) = k_eff;
                 z(i,k) = dz;
@@ -380,7 +380,7 @@ switch(choose)
             end
         end
         for i = limx(2)+1:limx(3)
-            for k = limy(4):(My/2)
+            for k = limy(3):(My/2)
                 phi2d(i,k) = 0;
                 k_effxy(i,k) = k_eff;
                 z(i,k) = dz;
@@ -390,7 +390,7 @@ switch(choose)
         end
         %%% IC SEGMENTS %%%
         for i = limx(1)+1:limx(2)
-            for k = limy(4):(My/2)
+            for k = limy(3)+1:(My/2)
                 phi2d(i,k) = phi;%Q_ic / (0.02 * 0.1 * 0.0045);
                 k_effxy(i,k) = k_eff_ic;
                 z(i,k) = dz+dz_ic;
@@ -399,7 +399,7 @@ switch(choose)
             end
         end
         for i = limx(3)+1:(Mx/2)
-            for k = limy(4):(My/2)
+            for k = limy(3)+1:(My/2)
                 phi2d(i,k) = phi;%Q_ic / (0.02 * 0.1 * 0.0045);
                 k_effxy(i,k) = k_eff_ic;
                 z(i,k) = dz+dz_ic;
@@ -449,8 +449,6 @@ switch(choose)
         if Fo>(1/4), disp('This is unstable; increase number of time steps'), end
 
         %%% Bidimensional temperature profile equation by means of finite elements methods %%%
-        j=1; T(j,:,:)=T_b;       % Initial temperature profile T(x,t)=0 (assumed uniform)
-%         T(:,Mx+1,:)=T_b;
         for j = 2:N              %
             for i = 2:Mx
                 for k = 2:My
@@ -467,20 +465,6 @@ switch(choose)
 %                     T(j,i,k) = T(j-1,i,k) + (Dtrcz(i,k))*...
 %                         ((kzLaplx(j,i,k)) + (kzLaply(j,i,k)) + phi2d(i,k)*z(i,k) - (hDT(j,i,k)));
 
-%                     Dtrcz(i,k)= (Dt*V2d(i,k)) / (C(i,k)*z(i,k));
-%                     kzLaplx(j,i,k)=((k_effxy(i,k)+k_effxy(i+1,k))/2)*((z(i,k)+z(i+1,k))/2)*...
-%                                     ( (T(j-1,i+1,k)-T(j-1,i,k) ) / (Dx^2) ) - ...
-%                                     ((k_effxy(i,k)+k_effxy(i-1,k))/2)*((z(i,k)+z(i-1,k))/2)*...
-%                                     ( (T(j-1,i,k)-T(j-1,i-1,k) ) / (Dx^2) );
-%                     kzLaply(j,i,k)=((k_effxy(i,k)+k_effxy(i,k+1))/2)*((z(i,k)+z(i,k+1))/2)*...
-%                                     ( (T(j-1,i,k+1)-T(j-1,i,k) ) / (Dy^2) ) - ...
-%                                     ((k_effxy(i,k)+k_effxy(i,k-1))/2)*((z(i,k)+z(i,k-1))/2)*...
-%                                     ( (T(j-1,i,k)-T(j-1,i,k-1) ) / (Dy^2) );
-%                     hDT(j,i,k)=(emiss_cara+emiss_comp)*stefan_boltz* ((T(j-1,i,k))^4 - (T_box)^4);
-% 
-%                     T(j,i,k)= T(j-1,i,k) + Dtrcz(i,k) * ...
-%                     ((kzLaplx(j,i,k)) + kzLaply(j,i,k) + phi2d(i,k)*z(i,k) - hDT(j,i,k));
-%                 
                     T(j,i,k)= T(j-1,i,k) + ((Dt*V2d(i,k)) / (C(i,k)*z(i,k))) * ...
                     ( (((k_effxy(i,k)+k_effxy(i+1,k))/2)*((z(i,k)+z(i+1,k))/2)*...
                                     ( (T(j-1,i+1,k)-T(j-1,i,k) ) / (Dx^2) ) - ...
