@@ -84,7 +84,7 @@ switch(choose)
                 xline(L, '-.')
                 yline(T_b, '--')
                 yline(T_0, '--')
-                hold off
+                hold offemisividad
         end
 %___________________________________________________________________________
         %% Apartado B
@@ -462,7 +462,7 @@ switch(choose)
                                     ( (T(j-1,i,k)-T(j-1,i,k-1) ) / (Dy^2) )) ...
                     + phi2d(i,k)*z(i,k) - ...
                     ((emiss_cara+emiss_comp)*stefan_boltz* ((T(j-1,i,k))^4 - (T_box)^4) ) );
-                
+
                     %Boundory condition in x-nodes 0 and Nx+1:
                     T(j,1,k) = T_b;
                     T(j,Mx+1,k) = T_b;
@@ -475,12 +475,21 @@ switch(choose)
 
         T_0 =  max(max(max(T)))                             % Max T [K]
         T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
-        %%
-        %%% PLOT TEMPERATURE PROFILE %%%
+        %% %%% PLOT TEMPERATURE PROFILE %%%
         % Define temperature for easy plotting
         T_stat = T(N,:,:);                          % take stationary values
         T_stat_plot=permute(T_stat(1,:,:),[2 3 1]); % rewrite as T(x,y,t)
-        % Contour plot
+        % Transitory simulation
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        sim = 'n';      % 'y': Show animation of transitory phase
+        sim_frames = 500;% choose number of frames for the simulation
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        for i = 1:sim_frames
+            T_transit(i,:,:) = T( round(N/(i)), :, :);  % take transitory values
+        end
+        T_transit_PLOT=permute(T_transit(:,:,:),[2 3 1]); % rewrite as T(x,y,t)
+        %%% stationary %%%
+        Contour plot
         figure()
         hold on
         contourf(X,Y,T_stat_plot',15)
@@ -496,16 +505,44 @@ switch(choose)
         xlabel('{\it x} [m]')
         ylabel('{\it y} [m]');
         set(gca,'FontSize',18)
-        axis([0 dx 0 dy T_b*0.9 T_00*1.03])
+        axis([0 dx 0 dy T_b*0.9 T_0*1.03])
         hold off
-%___________________________________________________________________________
+        %%% transitory %%%
+        switch(sim)
+            case 'y'
+        % Contour plot Animation
+        %Initialize video
+        myVideo = VideoWriter('SimTransit'); %open video file
+        myVideo.FrameRate = 14;  %can adjust this, 5 - 10 works well for me
+        open(myVideo)
+        for i = sim_frames:-1:1
+            figure()
+            clf
+            hold on
+            contourf(X,Y,T_transit_PLOT(:,:,i)',15)
+            xlabel('{\it x} [m]')
+            ylabel('{\it y} [m]');
+            set(gca,'FontSize',18)
+            hold off
+            pause(0.01) %Pause and grab frame
+            frame = getframe(gcf); %get frame
+            writeVideo(myVideo, frame);
+            pause(0.02)
+            close()
+        end
+        close all
+%         movie(F)
+        close(myVideo)
+        
+        end
+        %___________________________________________________________________________
 end
         %% Symmetry by the face
         T_stat_plot2 = T_stat_plot;
         T_stat_plot2(( ( 1:(Mx/2))), (My/2):-1:1 ) = T_stat_plot2( ( (Mx):-1:(Mx/2)+1 ), (My/2):-1:1 );
         T_stat_plot2( ( 1:(Mx)),((My/2)+1):My) =   T_stat_plot2( ( 1:(Mx)),((My/2)):-1:1);
-        T_stat_plot2(:,My+1) = T_stat_plot2(:,My);  
-        
+        T_stat_plot2(:,My+1) = T_stat_plot2(:,My);
+
         T_00 = max(max(T_stat_plot2))
         % Contour plot
         figure()
