@@ -482,49 +482,28 @@ switch(choose)
         T_stat_plot=permute(T_stat(1,:,:),[2 3 1]); % rewrite as T(x,y,t)
         % Contour plot
         figure()
-        hold on
-        contourf(X,Y,T_stat_plot',15)
-        xlabel('{\it x} [m]')
-        ylabel('{\it y} [m]');
-        set(gca,'FontSize',18)
-        hold off
+        contourf(X,Y,T_stat_plot')
         % Surf plot
         figure()
-        hold on
         surf(X,Y,T_stat_plot')
-        zlabel('{\it T} [K]')
-        xlabel('{\it x} [m]')
-        ylabel('{\it y} [m]');
-        set(gca,'FontSize',18)
-        axis([0 dx 0 dy T_b*0.9 T_00*1.03])
-        hold off
 %___________________________________________________________________________
 end
         %% Symmetry by the face
         T_stat_plot2 = T_stat_plot;
-        T_stat_plot2(( ( 1:(Mx/2))), (My/2):-1:1 ) = T_stat_plot2( ( (Mx):-1:(Mx/2)+1 ), (My/2):-1:1 );
+%         T_stat_plot2( ( ( (Mx/2)+1):Mx), 1:(My/2)) =   T_stat_plot2( ( ( (Mx/2)):-1:1), 1:(My/2));
         T_stat_plot2( ( 1:(Mx)),((My/2)+1):My) =   T_stat_plot2( ( 1:(Mx)),((My/2)):-1:1);
+
+%         T_stat_plot2(( ( (Mx/2)):-1:1), (My/2):-1:1 ) = T_stat_plot2( ( (Mx):-1:(Mx/2)+1 ), (My/2):-1:1 );
+T_stat_plot2(( ( (Mx/2)):-1:1), (My/2):-1:1 ) = T_stat_plot2( ( (Mx):-1:(Mx/2)+1 ), (My/2):-1:1 );
         T_stat_plot2(:,My+1) = T_stat_plot2(:,My);  
         
-        T_00 = max(max(T_stat_plot2))
+        max(max(T_stat_plot2));
         % Contour plot
         figure()
-        hold on
-        contourf(X,Y,T_stat_plot2',14)
-        xlabel('{\it x} [m]')
-        ylabel('{\it y} [m]');
-        set(gca,'FontSize',18)
-        hold off
+        contourf(X,Y,T_stat_plot2')
         % Surf plot
         figure()
-        hold on
         surf(X,Y,T_stat_plot2')
-        zlabel('{\it T} [K]')
-        xlabel('{\it x} [m]')
-        ylabel('{\it y} [m]');
-        set(gca,'FontSize',18)
-        axis([0 dx 0 dy T_b*0.9 T_00*1.03])
-        hold off
 %         %___________________________________________________________________________
 %% ======= FUNCIONES ADICIONALES ======= %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
