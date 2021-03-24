@@ -17,7 +17,9 @@
 % - ADD CENTRAL PROFILE COMPARISON @Y=MX/2 IN E WITH ANSWERS FROM D (PLOT)
 % - VALIDATE NUMERICAL MODEL WITH A & C 
 % - PLOT IN THE SAME GRAPH A & B (NUM&ANALYTICAL); AND C&D
-%   (NUM&ANALYTICAL); AND B & D (NUMERICAL)
+%   (NUM&ANALYTICAL); AND B & D
+% 
+%
 %___________________________________________________________________________
 close all; clear all; clc;
 %___________________________________________________________________________
