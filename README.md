@@ -1,2 +1,2 @@
-# Heat Conduction - Numerical Simulation
+# Thermal-Control---2DNumerical-Simulation
  
