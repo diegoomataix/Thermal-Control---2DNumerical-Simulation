@@ -15,11 +15,9 @@
 %
 % TO DO:
 % - ADD CENTRAL PROFILE COMPARISON @Y=MX/2 IN E WITH ANSWERS FROM D (PLOT)
-% - VALIDATE NUMERICAL MODEL WITH A & C 
+% - VALIDATE NUMERICAL MODEL WITH A & C
 % - PLOT IN THE SAME GRAPH A & B (NUM&ANALYTICAL); AND C&D
-%   (NUM&ANALYTICAL); AND B & D
-% 
-%
+%   (NUM&ANALYTICAL); AND B & D (NUMERICAL)
 %___________________________________________________________________________
 close all; clear all; clc;
 %___________________________________________________________________________
@@ -59,7 +57,7 @@ N = 6e5;                                                    % # of time steps
 tsim = 3000;                                                % Total simulation time [s]
 %___________________________________________________________________________
 switch(choose)
-%___________________________________________________________________________
+    %___________________________________________________________________________
     case 'a'
         %% Apartado A
         % Considerando que la tarjeta sólo evacua calor por los bordes,
@@ -76,11 +74,11 @@ switch(choose)
             case 2
                 b = b_coef(Q_ic_tot, k_eff, dz*dy);         % [K*m]
                 for i = 1:M
-                     T(i) = temp_parb(T_b, b, (x(i)), phi, k_eff);  % [K]
+                    T(i) = temp_parb(T_b, b, (x(i)), phi, k_eff);  % [K]
                 end
                 T_0 = max(T)                                % Max T [K]
                 T_0_C = convtemp(T_0, 'K', 'C')             % Max T [Celsius]
-
+                
                 figure()
                 myplot(x,T)
                 hold on
@@ -92,7 +90,7 @@ switch(choose)
                 yline(T_0, '--')
                 hold off
         end
-%___________________________________________________________________________
+        %___________________________________________________________________________
         %% Apartado B
     case 'b'
         % Considerando que la tarjeta sólo evacua calor por los bordes, determinar
@@ -105,18 +103,18 @@ switch(choose)
         for i = 1:6
             lim(i) = 2*i*m;                                 % [m]
         end
-
+        
         %%% Define the heat for each type of section: 1: w/o IC, 2 w/ IC %%%
         Q1 = Q_ic_tot;                                      % [W]
         Q2 = Q_ic_tot*(1/3);                                % [W]
-
+        
         %%% Coefficients for the first section %%%
         a = T_b;                                            % [K]
         b = b_coef(Q_ic_tot, k_eff, dz*dy);                 % [K*m]
-
+        
         A_ic = (dz+dz_ic)*dy;                               % [m^2]
         phi_ic = Q_ic / (0.02 * 0.1 * 0.0045);              % Volumetric dissipation [W/m^3]
-
+        
         %%%%%%%%%%%% CALCULATIONS %%%%%%%%%%%%
         %%% SECTION 1: From the PCB border to the start of the 1st IC %%%
         T = zeros(1, M);
@@ -131,7 +129,7 @@ switch(choose)
                 for i = lim(1):lim(2)
                     T(i) = temp_parb(a, b, (x(i) - x(lim(1))), phi_ic, k_eff_ic);   % [K]
                 end
-
+                
             case 2 %%% k --> inf %%%
                 for i = lim(1)+1:lim(2)
                     T(i) = T(lim(1));                       % [K]
@@ -149,55 +147,18 @@ switch(choose)
                 for i = (lim(3)+1): (M/2)
                     T(i) = temp_parb(a, b, (x(i) - x(lim(3))), phi_ic, k_eff_ic);   % [K]
                 end
-
+                
             case 2 %%% k --> inf
                 for i = (lim(3)+1): (M/2)
                     T(i) = T(lim(3));                       % [K]
                 end
         end
         %%% TAKE ADVANTAGE OF SYMMETRY %%%
-                T(((M/2)+1):M) = T(M/2:-1:1);               % Mirror curve
-
-                T_0 = max(T)                                % Max T [K]
-                T_0_C = convtemp(T_0, 'K', 'C')             % Max T [Celsius]
-
-        %%% PLOT TEMPERATURE PROFILE %%%
-                figure()
-                hold on
-                myplot(x,T)
-                axis([0 dx T_b*0.9 max(T)*1.1])
-                ylabel('{\it T} [K]')
-                xlabel('{\it x} [m]');
-                xline(L, '-.')
-                yline(T_b, '--')
-                yline(T_0, '--')
-                hold off
-%___________________________________________________________________________
-        %% Apartado C
-        % Considerando que se transmite calor por radiación, con una emisividad media de 0,7
-        % por el lado de los componentes, y de 0,5 por la cara opuesta, con una caja electrónica
-        % que se puede suponer negra y a 45 ºC, determinar la temperatura máxima linealizando las
-        % pérdidas radiativas y con disipación uniforme.
-    case 'c'
-
-        p = (2*dy);         % Perimeter [m]
-        A = dy * dz;        % Area [m^2]
-        T_avg = 375;        % Average Temperature [K] % from 'a' --> 375K; from 'b' --> 363K
-
-        eta = 4*p * stefan_boltz * emiss * T_avg^3;         % Auxiliary function for simplifying the ODE
-        lambda = sqrt( eta / ( (k_eff * A) ) )                                  % Eigenvalues of the ODE
-        c2 = (T_b - T_box - ( (phi * A) / eta ) / (1+exp(-lambda *dx)) )        % Coef. of the ODE
-        c1 = c2*exp(-lambda*dx)                                                 % Coef. of the ODE
-
-        % Temperature profile, the expression is found by solving the ODE
-        % and applying the BC.
-        for i = 1:M
-            T(i) = c1* exp(lambda * x(i) ) + c2*exp(-lambda * x(i) ) + T_box + ( (phi*A)/eta);  % [K]
-        end
-
-        T_0 = max(T)                                        % Max T [K]
-        T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
-
+        T(((M/2)+1):M) = T(M/2:-1:1);               % Mirror curve
+        
+        T_0 = max(T)                                % Max T [K]
+        T_0_C = convtemp(T_0, 'K', 'C')             % Max T [Celsius]
+        
         %%% PLOT TEMPERATURE PROFILE %%%
         figure()
         hold on
@@ -209,19 +170,56 @@ switch(choose)
         yline(T_b, '--')
         yline(T_0, '--')
         hold off
-
-%___________________________________________________________________________
+        %___________________________________________________________________________
+        %% Apartado C
+        % Considerando que se transmite calor por radiación, con una emisividad media de 0,7
+        % por el lado de los componentes, y de 0,5 por la cara opuesta, con una caja electrónica
+        % que se puede suponer negra y a 45 ºC, determinar la temperatura máxima linealizando las
+        % pérdidas radiativas y con disipación uniforme.
+    case 'c'
+        
+        p = (2*dy);         % Perimeter [m]
+        A = dy * dz;        % Area [m^2]
+        T_avg = 375;        % Average Temperature [K] % from 'a' --> 375K; from 'b' --> 363K
+        
+        eta = 4*p * stefan_boltz * emiss * T_avg^3;         % Auxiliary function for simplifying the ODE
+        lambda = sqrt( eta / ( (k_eff * A) ) )                                  % Eigenvalues of the ODE
+        c2 = (T_b - T_box - ( (phi * A) / eta ) / (1+exp(-lambda *dx)) )        % Coef. of the ODE
+        c1 = c2*exp(-lambda*dx)                                                 % Coef. of the ODE
+        
+        % Temperature profile, the expression is found by solving the ODE
+        % and applying the BC.
+        for i = 1:M
+            T(i) = c1* exp(lambda * x(i) ) + c2*exp(-lambda * x(i) ) + T_box + ( (phi*A)/eta);  % [K]
+        end
+        
+        T_0 = max(T)                                        % Max T [K]
+        T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
+        
+        %%% PLOT TEMPERATURE PROFILE %%%
+        figure()
+        hold on
+        myplot(x,T)
+        axis([0 dx T_b*0.9 max(T)*1.1])
+        ylabel('{\it T} [K]')
+        xlabel('{\it x} [m]');
+        xline(L, '-.')
+        yline(T_b, '--')
+        yline(T_0, '--')
+        hold off
+        
+        %___________________________________________________________________________
         %% Apartado D
         % Resolver el caso anterior pero sin linealizar y con la disipación no uniforme.
     case 'd'
         h=0;                % Convective coefficient [W/(m^2·K)] (NO CONVECTION)
         p = (2*dy);         % Radiative perimeter [m]
-%
+        %
         %%% Limits for each segment %%%
         for i = 1:6
             lim(i) = 2*i*m;
         end
-
+        
         %%% Definir los vectores para representar las discontinuidades %%%
         % Initialising
         phi = ones(1,M+1);
@@ -240,7 +238,7 @@ switch(choose)
         %%% IC %%%
         for i = lim(1)+1:lim(2)
             phi(i) = Q_ic / (0.02 * 0.1 * 0.0045);
-%             phi(i) = Q_ic_tot / (0.02 * 0.1 * 0.0045);
+            %             phi(i) = Q_ic_tot / (0.02 * 0.1 * 0.0045);
             k(i) = k_eff_ic;
             A_vect(i) = (dz+dz_ic)*dy;                      % [m^2]
             V(i) = dx * (dz+dz_ic) * dy;                    % [m^3]
@@ -275,7 +273,7 @@ switch(choose)
         A_vect(M+1) = A_vect(M);
         V(M+1) = V(M);
         C(M+1) = C(M);
-
+        
         %%Initialising:         % N time % M space
         Dx=dx/M;                % Element width
         X=linspace(0,dx,M+1);   % Node position list (equispaced)
@@ -285,7 +283,7 @@ switch(choose)
         kALapla = ones(N,M+1);
         phDT = ones(N,M+1);
         T=T_b*ones(N,M+1); 	% Temperature-matrix (times from 1 to n, and positions from 1 to M+1)
-
+        
         %%% Check for stability of the explicit finite difference method %%
         for i = 1:M
             Fo_vect(i)=k(i)/(C(i)/V(i))*Dt/(Dx*Dx);         % Fourier's number
@@ -295,7 +293,7 @@ switch(choose)
         Bi = max(Bi_vect);
         disp(['Stability requires 1-Fo*(2+Bi)<0. It actually is =',num2str(1-Fo*(2+Bi))])
         if 1-Fo*(2+Bi)<0 disp('This is unstable; increase number of time steps'), end
-
+        
         %%% Temperature profile equation by means of finite elements methods %%%
         j=1; T(j,:)=T_b;       % Initial temperature profile T(x,t)=0 (assumed uniform)
         it=M+1; T(:,it)=T_b;
@@ -307,7 +305,7 @@ switch(choose)
                     (T(j-1,i+1)-T(j-1,i))- ((k(i)+k(i-1))/2) * ((A_vect(i)+A_vect(i-1))/2) *...
                     (T(j-1,i)-T(j-1,i-1)) )/Dx^2);
                 phDT(j,i) = (p*(emiss*stefan_boltz*(T(j-1,i)^4 - T_box^4)));
-
+                
                 T(j,i)=T(j-1,i)+(DtrcA(i))*...
                     ((kALapla(j,i))+(phi(i)*A_vect(i)) - (phDT(j,i)) );
             end
@@ -321,7 +319,7 @@ switch(choose)
         T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
         subplot(2,1,1);myplot(t,T(:,1:M/10:M+1));xlabel('{\it t} [s]'),ylabel('{\it T} [K]');title('{\it T(t,x)} {\it vs}.{\it t} at several locations')
         subplot(2,1,2);myplot(X,T(1:N/100:N,:));xlabel('{\it X} [m]'),ylabel('{\it T} [K]');title('{\it T(t,x)} {\it vs}.{\it X} at several times')
-%___________________________________________________________________________
+        %___________________________________________________________________________
         %% Apartado E
         % Resolver el problema térmico bidimensional estacionario y comparar el perfil
         % central de temperaturas con el del caso anterior.
@@ -405,35 +403,35 @@ switch(choose)
             end
         end
         %%% INTERPOLATE %%%%
-            for j = 1:3
-                for i =limx(j):limx(j)
-                    for k = limy(3):(My/2)+1
-                        phi2d(i,k) = (phi2d(i-1,k)+phi2d(i+1,k))/2;
-                        k_effxy(i,k) = (k_effxy(i-1,k)+k_effxy(i+1,k))/2;
-                        z(i,k) = (z(i-1,k)+z(i+1,k))/2;
-                        V2d(i,k) = (V2d(i-1,k)+V2d(i+1,k))/2;
-                        C(i,k) = (C(i-1,k)+C(i+1,k))/2;
-                    end
+        for j = 1:3
+            for i =limx(j):limx(j)
+                for k = limy(3):(My/2)+1
+                    phi2d(i,k) = (phi2d(i-1,k)+phi2d(i+1,k))/2;
+                    k_effxy(i,k) = (k_effxy(i-1,k)+k_effxy(i+1,k))/2;
+                    z(i,k) = (z(i-1,k)+z(i+1,k))/2;
+                    V2d(i,k) = (V2d(i-1,k)+V2d(i+1,k))/2;
+                    C(i,k) = (C(i-1,k)+C(i+1,k))/2;
                 end
             end
-            for i =limx(1):limx(2)
-                for k = limy(3):limy(3)
-                    phi2d(i,k) = (phi2d(i,k-1)+phi2d(i,k+1))/2;
-                    k_effxy(i,k) = (k_effxy(i,k-1)+k_effxy(i,k+1))/2;
-                    z(i,k) = (z(i,k-1)+z(i,k+1))/2;
-                    V2d(i,k) = (V2d(i,k-1)+V2d(i,k+1))/2;
-                    C(i,k) = (C(i,k-1)+C(i,k+1))/2;
-                end
+        end
+        for i =limx(1):limx(2)
+            for k = limy(3):limy(3)
+                phi2d(i,k) = (phi2d(i,k-1)+phi2d(i,k+1))/2;
+                k_effxy(i,k) = (k_effxy(i,k-1)+k_effxy(i,k+1))/2;
+                z(i,k) = (z(i,k-1)+z(i,k+1))/2;
+                V2d(i,k) = (V2d(i,k-1)+V2d(i,k+1))/2;
+                C(i,k) = (C(i,k-1)+C(i,k+1))/2;
             end
-            for i =limx(3):(Mx/2)
-                for k = limy(3):limy(3)
-                    phi2d(i,k) = (phi2d(i,k-1)+phi2d(i,k+1))/2;
-                    k_effxy(i,k) = (k_effxy(i,k-1)+k_effxy(i,k+1))/2;
-                    z(i,k) = (z(i,k-1)+z(i,k+1))/2;
-                    V2d(i,k) = (V2d(i,k-1)+V2d(i,k+1))/2;
-                    C(i,k) = (C(i,k-1)+C(i,k+1))/2;                    
-                end
+        end
+        for i =limx(3):(Mx/2)
+            for k = limy(3):limy(3)
+                phi2d(i,k) = (phi2d(i,k-1)+phi2d(i,k+1))/2;
+                k_effxy(i,k) = (k_effxy(i,k-1)+k_effxy(i,k+1))/2;
+                z(i,k) = (z(i,k-1)+z(i,k+1))/2;
+                V2d(i,k) = (V2d(i,k-1)+V2d(i,k+1))/2;
+                C(i,k) = (C(i,k-1)+C(i,k+1))/2;
             end
+        end
         %%%% TAKE ADVANTAGE OF SYMMETRY
         phi2d( ( ( (Mx/2)+1):Mx), 1:(My/2)) =   phi2d( ( ( (Mx/2)):-1:1), 1:(My/2));
         phi2d( ( 1:(Mx)),((My/2)+1):My) =   phi2d( ( 1:(Mx)),((My/2)):-1:1);
@@ -456,7 +454,7 @@ switch(choose)
         pcolor(X,Y,V2d')
         figure()
         pcolor(X,Y,C')
-
+        
         %%% Check for stability of the explicit finite difference method %%
         for i = 1:Mx
             for k = 1:My
@@ -468,32 +466,33 @@ switch(choose)
         disp(['Stability requires Fo<1/4. It actually is =',num2str(Fo)])
         if Fo>(1/4), disp('This is unstable; increase number of time steps'), end
         %% %%% Bidimensional temperature profile equation by means of finite elements methods %%%
-for k = 1:N
-    for i = 2:Mx-1
-        for j = 2:My-1
-             T(i, j, k+1) = T(i, j, k) + (Dt*V2d(i,j))/(C(i,j)*z(i,j))*...
-                            ( ((k_effxy(i+1,j)+k_effxy(i, j))/2)*((z(i+1,j)+z(i, j))/2)*(T(i+1, j, k)-T(i, j, k))/(Dx^2)...
-                            -((k_effxy(i,j)+k_effxy(i-1,j))/2)*((z(i,j)+z(i-1,j))/2)*(T(i, j, k)-T(i-1, j, k))/(Dx^2)...
-                            +((k_effxy(i,j)+k_effxy(i,j+1))/2)*((z(i,j)+z(i,j+1))/2)*(T(i, j+1, k)-T(i, j, k))/(Dy^2)...
-                            -((k_effxy(i,j)+k_effxy(i,j-1))/2)*((z(i,j)+z(i,j-1))/2)*(T(i, j, k)-T(i, j-1, k))/(Dy^2)...
-                            + phi2d(i,j)*z(i, j)+...
-                            -((emiss_cara+emiss_comp)*stefan_boltz*(T(i, j, k)^4-T_box^4)) );    
+        for k = 1:N
+            for i = 2:Mx-1
+                for j = 2:My-1
+                    T(i, j, k+1) = T(i, j, k) + (Dt*V2d(i,j))/(C(i,j)*z(i,j))*...
+                        ( ((k_effxy(i+1,j)+k_effxy(i, j))/2)*((z(i+1,j)+z(i, j))/2)*(T(i+1, j, k)-T(i, j, k))/(Dx^2)...
+                        -((k_effxy(i,j)+k_effxy(i-1,j))/2)*((z(i,j)+z(i-1,j))/2)*(T(i, j, k)-T(i-1, j, k))/(Dx^2)...
+                        +((k_effxy(i,j)+k_effxy(i,j+1))/2)*((z(i,j)+z(i,j+1))/2)*(T(i, j+1, k)-T(i, j, k))/(Dy^2)...
+                        -((k_effxy(i,j)+k_effxy(i,j-1))/2)*((z(i,j)+z(i,j-1))/2)*(T(i, j, k)-T(i, j-1, k))/(Dy^2)...
+                        + phi2d(i,j)*z(i, j)+...
+                        -((emiss_cara+emiss_comp)*stefan_boltz*(T(i, j, k)^4-T_box^4)) );
+                end
+            end
+            for i = 2:Mx-1
+                T(i, 1, k+1) = T(i, j-1, k);
+                T(i, My, k+1) = T(i, j-1, k);
+            end
         end
-    end
-    for i = 2:Mx-1
-        T(i, 1, k+1) = T(i, j-1, k);
-        T(i, My, k+1) = T(i, j-1, k);
-    end
-end
         T_0 =  max(max(max(T)))                             % Max T [K]
         T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
         %% %%% PLOT TEMPERATURE PROFILE %%%
         % Define temperature for easy plotting
         T_stat_plot = T(:,:,N);                                     % take stationary values
+        T_stat_plot = T(:,(My/2),N);
         % Transitory simulation matrix
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         sim = 'n';      % 'y': Save an animation of transitory phase
-        sim_frames = 200;% choose number of frames for the simulation
+        sim_frames = 600;% choose number of frames for the simulation
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         switch(sim)
             case 'y'
@@ -502,35 +501,46 @@ end
                 end
         end
         %%% PLOT stationary %%%
-         my3dplot(X, Y, T_stat_plot, dx, dy, T_b, T_0)
+        my3dplot(X, Y, T_stat_plot, dx, dy, T_b, T_0) % Plot 2D Temp profile
+                figure()
+        
+        hold on
+        myplot(x,T)
+        axis([0 dx T_b*0.9 max(T)*1.1])
+        ylabel('{\it T} [K]')
+        xlabel('{\it x} [m]');
+        xline(L, '-.')
+        yline(T_b, '--')
+        yline(T_0, '--')
+        hold off
         %%% ANIMATE transitory %%%
         switch(sim)
             case 'y'
-        % Contour plot Animation
-        % Initialize video
-        myVideo = VideoWriter('SimTransit2');   % open video file
-        myVideo.FrameRate = 18;                 % can adjust this
-        open(myVideo)
-        for i = sim_frames:-1:1
-            figure()
-            clf
-            hold on
-            contourf(X,Y,T_transit_PLOT(:,:,i)',15)
-            xlabel('{\it x} [m]')
-            ylabel('{\it y} [m]');
-            set(gca,'FontSize',18)
-            colorbar
-            hold off
-            pause(0.01)                         % Pause and grab frame
-            frame = getframe(gcf);              % get frame
-            writeVideo(myVideo, frame);
-            pause(0.01)
-            close()
+                % Contour plot Animation
+                % Initialize video
+                myVideo = VideoWriter('SimTransit3');   % open video file
+                myVideo.FrameRate = 50;                 % can adjust this
+                open(myVideo)
+                for i = sim_frames:-1:1
+                    figure()
+                    clf
+                    hold on
+                    contourf(X,Y,T_transit_PLOT(:,:,i)',15)
+                    xlabel('{\it x} [m]')
+                    ylabel('{\it y} [m]');
+                    set(gca,'FontSize',18)
+                    colorbar
+                    hold off
+                    pause(0.01)                         % Pause and grab frame
+                    frame = getframe(gcf);              % get frame
+                    writeVideo(myVideo, frame);
+                    pause(0.01)
+                    close()
+                end
+                close all
+                close(myVideo)
         end
-        close all
-        close(myVideo)
-        end
-%         %___________________________________________________________________________
+        %         %___________________________________________________________________________
 end
 %         %___________________________________________________________________________
 %% ======= FUNCIONES ADICIONALES ======= %%
@@ -568,24 +578,24 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 3D Plotting function
 function my3dplot(x, y, z, dx, dy, ymin, ymax)
-        %Contour plot
-        figure()
-        hold on
-        contourf(x,y,z',15)
-        xlabel('{\it x} [m]')
-        ylabel('{\it y} [m]');
-        set(gca,'FontSize',18)
-        colorbar
-        hold off
-        % Surf plot
-        figure()
-        hold on
-        surf(x,y,z')
-        zlabel('{\it T} [K]')
-        xlabel('{\it x} [m]')
-        ylabel('{\it y} [m]');
-        set(gca,'FontSize',18)
-        axis([0 dx 0 dy ymin*0.9 ymax*1.03])
-        hold off
+%Contour plot
+figure()
+hold on
+contourf(x,y,z',15)
+xlabel('{\it x} [m]')
+ylabel('{\it y} [m]');
+set(gca,'FontSize',18)
+colorbar
+hold off
+% Surf plot
+figure()
+hold on
+surf(x,y,z')
+zlabel('{\it T} [K]')
+xlabel('{\it x} [m]')
+ylabel('{\it y} [m]');
+set(gca,'FontSize',18)
+axis([0 dx 0 dy ymin*0.9 ymax*1.03])
+hold off
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

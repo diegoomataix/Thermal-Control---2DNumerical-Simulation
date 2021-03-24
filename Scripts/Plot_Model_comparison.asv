@@ -1,0 +1,38 @@
+% clc; clear all;
+m = 8e0;                                                    % Spatial Subdivisions
+M = 14*m;                                                   % Total n of spatial subdivisions
+x = linspace(0, 0.14, M+1);                                     % Spatial Coordinates [m]
+%%%%%
+figure()
+hold on
+myplot(x, SAVED)
+myplot(X, T_stat_plot_central, '-k','LineWidth',1)
+axis([0 dx T_b*0.9 max(T_0)*1.1])
+ylabel('{\it T} [K]')
+xlabel('{\it x} [m]');
+xline(L, '-.')
+yline(T_b, '--')
+yline(T_0, '--')
+hold off
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Plotting function
+function myplot1(x, y)
+plot(x,y)
+box on
+grid on
+grid minor
+axis tight
+set(gca,'FontSize',18)
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Plotting function
+function myplot1(x, y)
+plot(x,y)
+box on
+grid on
+grid minor
+axis tight
+set(gca,'FontSize',18)
+end
