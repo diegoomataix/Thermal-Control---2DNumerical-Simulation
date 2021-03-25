@@ -317,8 +317,20 @@ switch(choose)
         %%% PLOT TEMPERATURE PROFILE %%%
         T_0 =  max(T(N,:))                                  % Max T [K]
         T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
+        % Plot transitory
         subplot(2,1,1);myplot(t,T(:,1:M/10:M+1));xlabel('{\it t} [s]'),ylabel('{\it T} [K]');title('{\it T(t,x)} {\it vs}.{\it t} at several locations')
         subplot(2,1,2);myplot(X,T(1:N/100:N,:));xlabel('{\it X} [m]'),ylabel('{\it T} [K]');title('{\it T(t,x)} {\it vs}.{\it X} at several times')
+        % Plot stationary
+        figure()                                      % Plot 1D Stationary Temp profile
+        hold on
+        myplot( X, T(N,:) )
+        axis([0 dx T_b*0.9 max(T_0)*1.1])
+        ylabel('{\it T} [K]')
+        xlabel('{\it x} [m]');
+        xline(L, '-.')
+        yline(T_b, '--')
+        yline(T_0, '--')
+        hold off
         %___________________________________________________________________________
         %% Apartado E
         % Resolver el problema térmico bidimensional estacionario y comparar el perfil
@@ -326,12 +338,12 @@ switch(choose)
     case 'e'
         phi = (Q_ic) / ((dz+dz_ic)*dy_ic*dx_ic);                             % Volumetric dissipation [W/m^3]
         %%% Define 2D mesh %%%
-        m =3e0;                 % Spatial Subdivisions                              % 7e0 works
+        m =7e0;                 % Spatial Subdivisions                              % 7e0 works
         Mx = 14*m;              % Total n of spatial subdivisions (x-direction)
-        my = 3e0;               % Spatial Subdivisions (y-direction)                % 7e0 works
+        my = 7e0;               % Spatial Subdivisions (y-direction)                % 7e0 works
         My = 10*my;             % Total n of spatial subdivisions (y-direction)
-        N = 2e5;                % # of time steps                                 % 1.9e5 works
-        tsim = 3000;            % Total simulation time [s]                         % 750 works
+        N = 2.1e5;                % # of time steps                                 % 1.9e5 works
+        tsim = 1000;            % Total simulation time [s]                         % 750 works
         %%% Initialise %%%
         Dx=dx/Mx;               % Element width (x-direction)
         Dy=dy/My;               % Element width (y-direction)
@@ -444,16 +456,16 @@ switch(choose)
         C( ( ( (Mx/2)+1):Mx), 1:(My/2)) =   C( ( ( (Mx/2)):-1:1), 1:(My/2));
         C( ( 1:(Mx)),((My/2)+1):My) =   C( ( 1:(Mx)),((My/2)):-1:1);
         %%% plot parameters for heat equation
-        figure()
-        pcolor(X,Y,phi2d'); colorbar
-        figure()
-        pcolor(X,Y,k_effxy')
-        figure()
-        pcolor(X,Y,z')
-        figure()
-        pcolor(X,Y,V2d')
-        figure()
-        pcolor(X,Y,C')
+%         figure()
+%         pcolor(X,Y,phi2d'); colorbar
+%         figure()
+%         pcolor(X,Y,k_effxy')
+%         figure()
+%         pcolor(X,Y,z')
+%         figure()
+%         pcolor(X,Y,V2d')
+%         figure()
+%         pcolor(X,Y,C')
         
         %%% Check for stability of the explicit finite difference method %%
         for i = 1:Mx
@@ -488,25 +500,24 @@ switch(choose)
         %% %%% PLOT TEMPERATURE PROFILE %%%
         % Define temperature for easy plotting
         T_stat_plot = T(:,:,N);                                     % take stationary values
-        T_stat_plot = T(:,(My/2),N);
+        T_stat_plot_central = T(:,(My/2),N);
         % Transitory simulation matrix
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        sim = 'n';      % 'y': Save an animation of transitory phase
+        sim = 'y';      % 'y': Save an animation of transitory phase
         sim_frames = 600;% choose number of frames for the simulation
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         switch(sim)
             case 'y'
                 for i = 1:sim_frames
-                    T_transit_PLOT(:,:,i) = T(:, :, round(N/(i)));  % take transitory values
+                    T_transit_PLOT(:,:,i) = T(:, :, round(N-(350*(i))+1));  % take transitory values
                 end
         end
         %%% PLOT stationary %%%
         my3dplot(X, Y, T_stat_plot, dx, dy, T_b, T_0) % Plot 2D Temp profile
-                figure()
-        
+        figure()                                      % Plot 2D central Temp profile
         hold on
-        myplot(x,T)
-        axis([0 dx T_b*0.9 max(T)*1.1])
+        myplot(X,T_stat_plot_central)
+        axis([0 dx T_b*0.9 max(T_stat_plot_central)*1.1])
         ylabel('{\it T} [K]')
         xlabel('{\it x} [m]');
         xline(L, '-.')
@@ -518,7 +529,7 @@ switch(choose)
             case 'y'
                 % Contour plot Animation
                 % Initialize video
-                myVideo = VideoWriter('SimTransit3');   % open video file
+                myVideo = VideoWriter('SimTransit5');   % open video file
                 myVideo.FrameRate = 50;                 % can adjust this
                 open(myVideo)
                 for i = sim_frames:-1:1
