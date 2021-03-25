@@ -26,7 +26,7 @@ Conduccion_NumSim_DATOS
 %___________________________________________________________________________
 %% Choose exercise to run
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-choose = 'd';       % 'a', 'b', 'c', 'd' & 'e' %
+choose = 'c';       % 'a', 'b', 'c', 'd' & 'e' %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %___________________________________________________________________________
 %% Define global parameters
@@ -211,7 +211,7 @@ switch(choose)
         % Resolver el caso anterior pero sin linealizar y con la disipación no uniforme.
     case 'd'
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        validate = 1;       % 1: Uniform dissipation    % 2: Non-uniform dissipation
+        validate = 2;       % 1: Uniform dissipation    % 2: Non-uniform dissipation
         radiation = 1;      % 1: Include radiation      % 2: Do not include radiation
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         h=0;                % Convective coefficient [W/(m^2·K)] (NO CONVECTION)
@@ -227,13 +227,13 @@ switch(choose)
 
         %%% Definir los vectores para representar las discontinuidades %%%
         % Initialising
+        phi = ones(1,M);
+        k = ones(1,M);
+        A_vect = ones(1,M);
+        V = ones(1,M);
+        C = ones(1,M);
         switch(validate)
             case 1
-                phi = ones(1,M);
-                k = ones(1,M);
-                A_vect = ones(1,M);
-                V = ones(1,M);
-                C = ones(1,M);
                 for i = 1:M
                     phi(i) = (3 * Q_ic) / Vol ;
                     k(i) = k_eff;
@@ -282,66 +282,70 @@ switch(choose)
                 V(((M/2)+1):M) = V(M/2:-1:1);                      % Mirror vector V
                 C(((M/2)+1):M) = C(M/2:-1:1);                      % Mirror vector C
         end
-        
         %%Initialising:         % N time % M space
         Dx=dx/M;                % Element width
-        X=linspace(0,dx,M);   % Node position list (equispaced)
+        X=linspace(0,dx,M);     % Node position list (equispaced)
         Dt=tsim/N;              % Time step (you might fix it instead of tsim)
         t=linspace(0,tsim,N)';  % Time vector
         DtrcA = ones(1,M);
         kALapla = ones(N,M);
         phDT = ones(N,M);
         T=T_b*ones(N,M); 	% Temperature-matrix (times from 1 to n, and positions from 1 to M+1)
-
-        %%% Check for stability of the explicit finite difference method %%
-        for i = 1:M
-            Fo_vect(i)=k(i)/(C(i)/V(i))*Dt/(Dx*Dx);         % Fourier's number
-            Bi_vect(i)=h*p*Dx/(k(i)*A_vect(i)/Dx);          % Biot's number
-        end
-        Fo = max(Fo_vect);
-        Bi = max(Bi_vect);
-        disp(['Stability requires 1-Fo*(2+Bi)<0. It actually is =',num2str(1-Fo*(2+Bi))])
-        if 1-Fo*(2+Bi)<0 disp('This is unstable; increase number of time steps'), end
-
-        %%% Temperature profile equation by means of finite elements methods %%%
-        j=1; T(j,:)=T_b;       % Initial temperature profile T(x,t)=0 (assumed uniform)
-        it=M; T(:,it)=T_b;
-        for j=2:N              % Time advance
-            i=1; T(j,i)=T_b;   % Left border (base) maintained at T_b
-            for i=2:M-1        % Generic spatial nodes
-                DtrcA(i) = (Dt/((C(i)/V(i))*A_vect(i)));
-                kALapla(j,i) = (( ((k(i+1)+k(i))/2) * ((A_vect(i)+A_vect(i+1))/2) *...
-                    (T(j-1,i+1)-T(j-1,i))- ((k(i)+k(i-1))/2) * ((A_vect(i)+A_vect(i-1))/2) *...
-                    (T(j-1,i)-T(j-1,i-1)) )/Dx^2);
-                phDT(j,i) = (p*(emiss*stefan_boltz*(T(j-1,i)^4 - T_box^4)));
-
-                T(j,i)=T(j-1,i)+(DtrcA(i))*...
-                    ((kALapla(j,i))+(phi(i)*A_vect(i)) - (phDT(j,i)) );
-            end
-            %Boundory condition in node 0:
-            T(j,1)=T_b;      %if Troot is fixed
-            %Boundory condition in node N:
-            T(j,M)=T_b;    %if Troot is fixed
-        end
-        %%% PLOT TEMPERATURE PROFILE %%%
-        T_0 =  max(T(N,:))                                  % Max T [K]
-        T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
-        % Plot transitory
-        subplot(2,1,1);myplot(t,T(:,1:M/10:M));xlabel('{\it t} [s]'),ylabel('{\it T} [K]');
-        title('{\it T(t,x)} {\it vs}.{\it t} at several locations')
-        subplot(2,1,2);myplot(X,T(1:N/100:N,:));xlabel('{\it X} [m]'),ylabel('{\it T} [K]');
-        title('{\it T(t,x)} {\it vs}.{\it X} at several times')
-        % Plot stationary
-        figure()                                      % Plot 1D Stationary Temp profile
-        hold on
-        myplot( X, T(N,:) )
-        axis([0 dx T_b*0.9 max(T_0)*1.1])
-        ylabel('{\it T} [K]')
-        xlabel('{\it x} [m]');
-        xline(L, '-.')
-        yline(T_b, '--')
-        yline(T_0, '--')
-        hold off
+        %%% plot parameters for heat equation
+        subplot(2,3,1);myplot(X,phi); ylabel('{\it \phi} [W/{m^{3}}]'); xlabel('{\it x} [m]'); 
+        subplot(2,3,2);myplot(X,k); ylabel('{\it k_{eff}} [W/{(m·K)}]'); xlabel('{\it x} [m]');  
+        subplot(2,3,3);myplot(X,A_vect); ylabel('{\it A} [m^2]');  xlabel('{\it x} [m]');
+        subplot(2,3,4); myplot(X,V); ylabel('{\it V} [m^3]'); xlabel('{\it x} [m]'); 
+        subplot(2,3,5);myplot(X,C); ylabel('{\it C} [J/K]'); xlabel('{\it x} [m]'); 
+%         %%% Check for stability of the explicit finite difference method %%
+%         for i = 1:M
+%             Fo_vect(i)=k(i)/(C(i)/V(i))*Dt/(Dx*Dx);         % Fourier's number
+%             Bi_vect(i)=h*p*Dx/(k(i)*A_vect(i)/Dx);          % Biot's number
+%         end
+%         Fo = max(Fo_vect);
+%         Bi = max(Bi_vect);
+%         disp(['Stability requires 1-Fo*(2+Bi)<0. It actually is =',num2str(1-Fo*(2+Bi))])
+%         if 1-Fo*(2+Bi)<0 disp('This is unstable; increase number of time steps'), end
+% 
+%         %%% Temperature profile equation by means of finite elements methods %%%
+%         j=1; T(j,:)=T_b;       % Initial temperature profile T(x,t)=0 (assumed uniform)
+%         it=M; T(:,it)=T_b;
+%         for j=2:N              % Time advance
+%             i=1; T(j,i)=T_b;   % Left border (base) maintained at T_b
+%             for i=2:M-1        % Generic spatial nodes
+%                 DtrcA(i) = (Dt/((C(i)/V(i))*A_vect(i)));
+%                 kALapla(j,i) = (( ((k(i+1)+k(i))/2) * ((A_vect(i)+A_vect(i+1))/2) *...
+%                     (T(j-1,i+1)-T(j-1,i))- ((k(i)+k(i-1))/2) * ((A_vect(i)+A_vect(i-1))/2) *...
+%                     (T(j-1,i)-T(j-1,i-1)) )/Dx^2);
+%                 phDT(j,i) = (p*(emiss*stefan_boltz*(T(j-1,i)^4 - T_box^4)));
+% 
+%                 T(j,i)=T(j-1,i)+(DtrcA(i))*...
+%                     ((kALapla(j,i))+(phi(i)*A_vect(i)) - (phDT(j,i)) );
+%             end
+%             %Boundory condition in node 0:
+%             T(j,1)=T_b;      %if Troot is fixed
+%             %Boundory condition in node N:
+%             T(j,M)=T_b;    %if Troot is fixed
+%         end
+%         %%% PLOT TEMPERATURE PROFILE %%%
+%         T_0 =  max(T(N,:))                                  % Max T [K]
+%         T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
+%         % Plot transitory
+%         subplot(2,1,1);myplot(t,T(:,1:M/10:M));xlabel('{\it t} [s]'),ylabel('{\it T} [K]');
+%         title('{\it T(t,x)} {\it vs}.{\it t} at several locations')
+%         subplot(2,1,2);myplot(X,T(1:N/100:N,:));xlabel('{\it X} [m]'),ylabel('{\it T} [K]');
+%         title('{\it T(t,x)} {\it vs}.{\it X} at several times')
+%         % Plot stationary
+%         figure()                                      % Plot 1D Stationary Temp profile
+%         hold on
+%         myplot( X, T(N,:) )
+%         axis([0 dx T_b*0.9 max(T_0)*1.1])
+%         ylabel('{\it T} [K]')
+%         xlabel('{\it x} [m]');
+%         xline(L, '-.')
+%         yline(T_b, '--')
+%         yline(T_0, '--')
+%         hold off
         %___________________________________________________________________________
         %% Apartado E
         % Resolver el problema térmico bidimensional estacionario y comparar el perfil
@@ -467,17 +471,11 @@ switch(choose)
         C( ( ( (Mx/2)+1):Mx), 1:(My/2)) =   C( ( ( (Mx/2)):-1:1), 1:(My/2));
         C( ( 1:(Mx)),((My/2)+1):My) =   C( ( 1:(Mx)),((My/2)):-1:1);
         %%% plot parameters for heat equation
-%         figure()
-%         pcolor(X,Y,phi2d'); colorbar
-%         figure()
-%         pcolor(X,Y,k_effxy')
-%         figure()
-%         pcolor(X,Y,z')
-%         figure()
-%         pcolor(X,Y,V2d')
-%         figure()
-%         pcolor(X,Y,C')
-
+        subplot(2,3,1); pcolor(X,Y,phi2d'); colorbar; a = colorbar; a.Label.String = '{\it \phi} [W/{m^{3}}]'; xlabel('{\it x} [m]');ylabel('{\it y} [m]');set(gca,'FontSize',18);
+        subplot(2,3,2);pcolor(X,Y,k_effxy'); colorbar; a = colorbar; a.Label.String = '{\it k_{eff}} [W/{(m·K)}]'; xlabel('{\it x} [m]');ylabel('{\it y} [m]');set(gca,'FontSize',18);
+        subplot(2,3,3);pcolor(X,Y,z'); colorbar; a = colorbar; a.Label.String = '{\it z} [m]'; xlabel('{\it x} [m]');ylabel('{\it y} [m]');set(gca,'FontSize',18);
+        subplot(2,3,4);pcolor(X,Y,V2d'); colorbar; a = colorbar; a.Label.String = '{\it V} [m^3]'; xlabel('{\it x} [m]');ylabel('{\it y} [m]');set(gca,'FontSize',18);
+        subplot(2,3,5);pcolor(X,Y,C'); colorbar; a = colorbar; a.Label.String = '{\it C} [J/K]'; xlabel('{\it x} [m]');ylabel('{\it y} [m]');set(gca,'FontSize',18);
         %%% Check for stability of the explicit finite difference method %%
         for i = 1:Mx
             for k = 1:My
@@ -529,11 +527,8 @@ switch(choose)
         hold on
         myplot(X,T_stat_plot_central)
         axis([0 dx T_b*0.9 max(T_stat_plot_central)*1.1])
-        ylabel('{\it T} [K]')
-        xlabel('{\it x} [m]');
-        xline(L, '-.')
-        yline(T_b, '--')
-        yline(T_0, '--')
+        ylabel('{\it T} [K]'); xlabel('{\it x} [m]');
+        xline(L, '-.'); yline(T_b, '--'); yline(T_0, '--')
         hold off
         %%% ANIMATE transitory %%%
         switch(sim)
@@ -548,9 +543,7 @@ switch(choose)
                     clf
                     hold on
                     contourf(X,Y,T_transit_PLOT(:,:,i)',15)
-                    xlabel('{\it x} [m]')
-                    ylabel('{\it y} [m]');
-                    set(gca,'FontSize',18)
+                    xlabel('{\it x} [m]'); ylabel('{\it y} [m]'); set(gca,'FontSize',18);
                     colorbar
                     hold off
                     pause(0.01)                         % Pause and grab frame
@@ -562,7 +555,7 @@ switch(choose)
                 close all
                 close(myVideo)
         end
-        %         %___________________________________________________________________________
+                %___________________________________________________________________________
 end
 %         %___________________________________________________________________________
 %% ======= FUNCIONES ADICIONALES ======= %%
