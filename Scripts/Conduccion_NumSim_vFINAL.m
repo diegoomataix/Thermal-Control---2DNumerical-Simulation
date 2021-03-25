@@ -210,8 +210,15 @@ switch(choose)
         %% Apartado D
         % Resolver el caso anterior pero sin linealizar y con la disipación no uniforme.
     case 'd'
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        validate = 2;       % 1: Uniform dissipation    % 2: Non-uniform dissipation
+        radiation = 2;      % 1: Include radiation      % 2: Do not include radiation
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         h=0;                % Convective coefficient [W/(m^2·K)] (NO CONVECTION)
         p = (2*dy);         % Radiative perimeter [m]
+        if radiation == 2
+            emiss = 0;
+        end
         %
         %%% Limits for each segment %%%
         for i = 1:6
@@ -220,58 +227,69 @@ switch(choose)
 
         %%% Definir los vectores para representar las discontinuidades %%%
         % Initialising
-        phi = ones(1,M+1);
-        k = ones(1,M+1);
-        A_vect = ones(1,M+1);
-        V = ones(1,M+1);
-        C = ones(1,M+1);
-        %%% NO IC %%%
-        for i = 1:lim(1)
-            phi(i) = 0;
-            k(i) = k_eff;
-            A_vect(i) = A;                                  % [m^2]
-            V(i) = dx * dz * dy;                            % [m^3]
-            C(i) = C_eff;                                   % [J / K]
+        switch(validate)
+            case 1
+                phi = ones(1,M+1);
+                k = ones(1,M+1);
+                A_vect = ones(1,M+1);
+                V = ones(1,M+1);
+                C = ones(1,M+1);
+                for i = 1:M+1
+                    phi(i) = (3 * Q_ic) / Vol ;
+                    k(i) = k_eff;
+                    A_vect(i)= A;
+                    V(i) = dx * dz * dy;
+                    C(i) =  C_eff;
+                end
+                
+            case 2
+                %%% NO IC %%%
+                for i = 1:lim(1)
+                    phi(i) = 0;
+                    k(i) = k_eff;
+                    A_vect(i) = A;                                  % [m^2]
+                    V(i) = dx * dz * dy;                            % [m^3]
+                    C(i) = C_eff;                                   % [J / K]
+                end
+                %%% IC %%%
+                for i = lim(1)+1:lim(2)
+                    phi(i) = Q_ic / (0.02 * 0.1 * 0.0045);
+                    k(i) = k_eff_ic;
+                    A_vect(i) = (dz+dz_ic)*dy;                      % [m^2]
+                    V(i) = dx * (dz+dz_ic) * dy;                    % [m^3]
+                    C(i) = C_eff_ic;                                % [J / K]
+                end
+                %%% NO IC %%%
+                for i = (lim(2)+1):lim(3)
+                    phi(i) = 0;
+                    k(i) = k_eff;
+                    A_vect(i) = A;                                  % [m^2]
+                    V(i) = dx * dz * dy;                            % [m^3]
+                    C(i) = C_eff;                                   % [J / K]
+                end
+                %%% IC %%%
+                for i = (lim(3)+1): (M/2)
+                    phi(i) = Q_ic / (0.02 * 0.1 * 0.0045);
+                    k(i) = k_eff_ic;
+                    A_vect(i) = (dz+dz_ic)*dy;                      % [m^2]
+                    V(i) = dx * (dz+dz_ic) * dy;                    % [m^3]
+                    C(i) = C_eff_ic;                                % [J / K]
+                end
+                %%%% TAKE ADVANTAGE OF SYMMETRY
+                phi(((M/2)+1):M) = phi((M/2):-1:1);                % Mirror vector phi
+                k(((M/2)+1):M) = k(M/2:-1:1);                      % Mirror vector k
+                A_vect(((M/2)+1):M) = A_vect(M/2:-1:1);            % Mirror vector A_vect
+                V(((M/2)+1):M) = V(M/2:-1:1);                      % Mirror vector V
+                C(((M/2)+1):M) = C(M/2:-1:1);                      % Mirror vector C
+                %%% Give a value to the M+1 vector location (needed for temperature
+                %%% equation
+                phi(M+1) = phi(M);
+                k(M+1) = k(M);
+                A_vect(M+1) = A_vect(M);
+                V(M+1) = V(M);
+                C(M+1) = C(M);
         end
-        %%% IC %%%
-        for i = lim(1)+1:lim(2)
-            phi(i) = Q_ic / (0.02 * 0.1 * 0.0045);
-            %             phi(i) = Q_ic_tot / (0.02 * 0.1 * 0.0045);
-            k(i) = k_eff_ic;
-            A_vect(i) = (dz+dz_ic)*dy;                      % [m^2]
-            V(i) = dx * (dz+dz_ic) * dy;                    % [m^3]
-            C(i) = C_eff_ic;                                % [J / K]
-        end
-        %%% NO IC %%%
-        for i = (lim(2)+1):lim(3)
-            phi(i) = 0;
-            k(i) = k_eff;
-            A_vect(i) = A;                                  % [m^2]
-            V(i) = dx * dz * dy;                            % [m^3]
-            C(i) = C_eff;                                   % [J / K]
-        end
-        %%% IC %%%
-        for i = (lim(3)+1): (M/2)
-            phi(i) = Q_ic / (0.02 * 0.1 * 0.0045);
-            k(i) = k_eff_ic;
-            A_vect(i) = (dz+dz_ic)*dy;                      % [m^2]
-            V(i) = dx * (dz+dz_ic) * dy;                    % [m^3]
-            C(i) = C_eff_ic;                                % [J / K]
-        end
-        %%%% TAKE ADVANTAGE OF SYMMETRY
-        phi(((M/2)+1):M) = phi((M/2):-1:1);                % Mirror vector phi
-        k(((M/2)+1):M) = k(M/2:-1:1);                      % Mirror vector k
-        A_vect(((M/2)+1):M) = A_vect(M/2:-1:1);            % Mirror vector A_vect
-        V(((M/2)+1):M) = V(M/2:-1:1);                      % Mirror vector V
-        C(((M/2)+1):M) = C(M/2:-1:1);                      % Mirror vector C
-        %%% Give a value to the M+1 vector location (needed for temperature
-        %%% equation
-        phi(M+1) = phi(M);
-        k(M+1) = k(M);
-        A_vect(M+1) = A_vect(M);
-        V(M+1) = V(M);
-        C(M+1) = C(M);
-
+        
         %%Initialising:         % N time % M space
         Dx=dx/M;                % Element width
         X=linspace(0,dx,M+1);   % Node position list (equispaced)
@@ -316,8 +334,10 @@ switch(choose)
         T_0 =  max(T(N,:))                                  % Max T [K]
         T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
         % Plot transitory
-        subplot(2,1,1);myplot(t,T(:,1:M/10:M+1));xlabel('{\it t} [s]'),ylabel('{\it T} [K]');title('{\it T(t,x)} {\it vs}.{\it t} at several locations')
-        subplot(2,1,2);myplot(X,T(1:N/100:N,:));xlabel('{\it X} [m]'),ylabel('{\it T} [K]');title('{\it T(t,x)} {\it vs}.{\it X} at several times')
+        subplot(2,1,1);myplot(t,T(:,1:M/10:M+1));xlabel('{\it t} [s]'),ylabel('{\it T} [K]');
+        title('{\it T(t,x)} {\it vs}.{\it t} at several locations')
+        subplot(2,1,2);myplot(X,T(1:N/100:N,:));xlabel('{\it X} [m]'),ylabel('{\it T} [K]');
+        title('{\it T(t,x)} {\it vs}.{\it X} at several times')
         % Plot stationary
         figure()                                      % Plot 1D Stationary Temp profile
         hold on
