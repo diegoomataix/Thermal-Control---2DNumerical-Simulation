@@ -26,7 +26,7 @@ Conduccion_NumSim_DATOS
 %___________________________________________________________________________
 %% Choose exercise to run
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-choose = 'e';       % 'a', 'b', 'c', 'd' & 'e' %
+choose = 'd';       % 'a', 'b', 'c', 'd' & 'e' %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %___________________________________________________________________________
 %% Define global parameters
@@ -211,8 +211,8 @@ switch(choose)
         % Resolver el caso anterior pero sin linealizar y con la disipación no uniforme.
     case 'd'
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        validate = 2;       % 1: Uniform dissipation    % 2: Non-uniform dissipation
-        radiation = 2;      % 1: Include radiation      % 2: Do not include radiation
+        validate = 1;       % 1: Uniform dissipation    % 2: Non-uniform dissipation
+        radiation = 1;      % 1: Include radiation      % 2: Do not include radiation
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         h=0;                % Convective coefficient [W/(m^2·K)] (NO CONVECTION)
         p = (2*dy);         % Radiative perimeter [m]
@@ -229,12 +229,12 @@ switch(choose)
         % Initialising
         switch(validate)
             case 1
-                phi = ones(1,M+1);
-                k = ones(1,M+1);
-                A_vect = ones(1,M+1);
-                V = ones(1,M+1);
-                C = ones(1,M+1);
-                for i = 1:M+1
+                phi = ones(1,M);
+                k = ones(1,M);
+                A_vect = ones(1,M);
+                V = ones(1,M);
+                C = ones(1,M);
+                for i = 1:M
                     phi(i) = (3 * Q_ic) / Vol ;
                     k(i) = k_eff;
                     A_vect(i)= A;
@@ -281,24 +281,17 @@ switch(choose)
                 A_vect(((M/2)+1):M) = A_vect(M/2:-1:1);            % Mirror vector A_vect
                 V(((M/2)+1):M) = V(M/2:-1:1);                      % Mirror vector V
                 C(((M/2)+1):M) = C(M/2:-1:1);                      % Mirror vector C
-                %%% Give a value to the M+1 vector location (needed for temperature
-                %%% equation
-                phi(M+1) = phi(M);
-                k(M+1) = k(M);
-                A_vect(M+1) = A_vect(M);
-                V(M+1) = V(M);
-                C(M+1) = C(M);
         end
         
         %%Initialising:         % N time % M space
         Dx=dx/M;                % Element width
-        X=linspace(0,dx,M+1);   % Node position list (equispaced)
+        X=linspace(0,dx,M);   % Node position list (equispaced)
         Dt=tsim/N;              % Time step (you might fix it instead of tsim)
         t=linspace(0,tsim,N)';  % Time vector
         DtrcA = ones(1,M);
-        kALapla = ones(N,M+1);
-        phDT = ones(N,M+1);
-        T=T_b*ones(N,M+1); 	% Temperature-matrix (times from 1 to n, and positions from 1 to M+1)
+        kALapla = ones(N,M);
+        phDT = ones(N,M);
+        T=T_b*ones(N,M); 	% Temperature-matrix (times from 1 to n, and positions from 1 to M+1)
 
         %%% Check for stability of the explicit finite difference method %%
         for i = 1:M
@@ -312,10 +305,10 @@ switch(choose)
 
         %%% Temperature profile equation by means of finite elements methods %%%
         j=1; T(j,:)=T_b;       % Initial temperature profile T(x,t)=0 (assumed uniform)
-        it=M+1; T(:,it)=T_b;
+        it=M; T(:,it)=T_b;
         for j=2:N              % Time advance
             i=1; T(j,i)=T_b;   % Left border (base) maintained at T_b
-            for i=2:M          % Generic spatial nodes
+            for i=2:M-1        % Generic spatial nodes
                 DtrcA(i) = (Dt/((C(i)/V(i))*A_vect(i)));
                 kALapla(j,i) = (( ((k(i+1)+k(i))/2) * ((A_vect(i)+A_vect(i+1))/2) *...
                     (T(j-1,i+1)-T(j-1,i))- ((k(i)+k(i-1))/2) * ((A_vect(i)+A_vect(i-1))/2) *...
@@ -328,13 +321,13 @@ switch(choose)
             %Boundory condition in node 0:
             T(j,1)=T_b;      %if Troot is fixed
             %Boundory condition in node N:
-            T(j,M+1)=T_b;    %if Troot is fixed
+            T(j,M)=T_b;    %if Troot is fixed
         end
         %%% PLOT TEMPERATURE PROFILE %%%
         T_0 =  max(T(N,:))                                  % Max T [K]
         T_0_C = convtemp(T_0, 'K', 'C')                     % Max T [Celsius]
         % Plot transitory
-        subplot(2,1,1);myplot(t,T(:,1:M/10:M+1));xlabel('{\it t} [s]'),ylabel('{\it T} [K]');
+        subplot(2,1,1);myplot(t,T(:,1:M/10:M));xlabel('{\it t} [s]'),ylabel('{\it T} [K]');
         title('{\it T(t,x)} {\it vs}.{\it t} at several locations')
         subplot(2,1,2);myplot(X,T(1:N/100:N,:));xlabel('{\it X} [m]'),ylabel('{\it T} [K]');
         title('{\it T(t,x)} {\it vs}.{\it X} at several times')
