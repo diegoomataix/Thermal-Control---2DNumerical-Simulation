@@ -40,7 +40,7 @@ dz_ic = 3e-3;   % [m]
 Vol_ic = dx_ic * dy_ic * dz_ic; % [m^3]
 A_ic = (dz+dz_ic)*dy;           % [m^2]
     % dispando:
-Q_ic = 5;       % [W]
+Q_ic = 5;                   % [W]
 Q_ic_tot = 3 * Q_ic /2;     % [W] (symmetry)
     % conductividad termica:
 k_ic = 50;       % [W / ( m * K )]
@@ -48,7 +48,7 @@ k_Cu = 395;      % [W / ( m * K )]
     % capacidad termica:
 C_ic = 20;       % [J / K]
     % separación entre ICs
-dist_ic = 20e-3;% [m] 
+dist_ic = 20e-3; % [m] 
 
 %%%% Otros datos %%%%
 % calor transmitido por radiacion:
@@ -64,9 +64,3 @@ c_0 = 2.9979e8;  % [m / s]                      % velocidad de la luz
 stefan_boltz = 5.67e-8; % [W / ( m^2 * K^4 )]   % Stefan-Boltzmann constant
 T_sun = 5800;    % [K]
 T_cbr = 2.7;     % [K]
-% C_1 = 3.742e8;   % [w * micrometer^4 / m^2      % 2 * pi * h * c^2]
-% C_2 = 1.439e4;   % [micrometer * K]             % h * c / k
-% sigma = 1.38065e-23; % [J / K]                  % Boltzmann constant
-% visible_range_min = 0.4e-6;  % [m]  % bandwidth
-% visible_range_max = 0.76e-6; % [m]  % bandwidth   
-

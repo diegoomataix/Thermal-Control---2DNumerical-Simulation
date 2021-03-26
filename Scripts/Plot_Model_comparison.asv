@@ -1,11 +1,22 @@
-clc; clear all; close all;
+% clc; clear all; close all;
 %% Data
 dx=0.14;
+dy=0.1;
 T_b = 298.15;
 m = 8e0;                                                    % Spatial Subdivisions
 M = 14*m;                                                   % Total n of spatial subdivisions
 x = linspace(0, dx, M);                                     % Spatial Coordinates [m]
 xx =x;                                                      % Spatial Coordinates [m]
+Mx = M;
+my = 7e0;               % Spatial Subdivisions (y-direction)                % 7e0 works
+My = 10*my;             % Total n of spatial subdivisions (y-direction)
+N = 2.1e5;              % # of time steps                                   % 1.9e5 works
+tsim = 1000;            % Total simulation time [s]                         % 750 works
+%%% Initialise %%%
+Dx=dx/Mx;               % Element width (x-direction)
+Dy=dy/My;               % Element width (y-direction)
+X=linspace(0,dx,Mx);    % Node position list (equispaced) (x-direction)
+Y=linspace(0,dy,My);    % Node position list (equispaced) (y-direction)
 % X = linspace(0,dx,M);
 
 T_apD_Num = [298.150000000000,301.243709669967,304.327898867862,307.404189535047,310.474249335283,313.539793224774,316.602585158364,319.664439941914,322.727225241583,325.792863761566,328.863335602689,331.940680815281,335.027002160826,338.124468098101,341.235316010888,344.361855695820,345.244988435313,345.634114084403,346.003069922636,346.351893577651,346.680620734790,346.989285122316,347.277918497457,347.546550633311,347.795209306585,348.023920286188,348.232707322666,348.421592138480,348.590594419131,348.739731805130,348.869019884807,348.978472187974,349.171842927707,349.882265833555,350.615140922503,351.371064730178,352.150656484623,352.954559001808,353.783439629312,354.637991241142,355.518933286868,356.427012898493,357.363006058738,358.327718834694,359.321988681090,360.346685817796,361.402714686465,362.491015491696,362.805991111289,362.933696693744,363.043130639751,363.134305856088,363.207233104991,363.261921000558,363.298376005880,363.316602430880,363.316602430880,363.298376005880,363.261921000558,363.207233104991,363.134305856088,363.043130639751,362.933696693744,362.805991111289,362.491015491696,361.402714686465,360.346685817796,359.321988681090,358.327718834694,357.363006058738,356.427012898493,355.518933286868,354.637991241142,353.783439629312,352.954559001808,352.150656484623,351.371064730178,350.615140922503,349.882265833555,349.171842927707,348.978472187974,348.869019884807,348.739731805130,348.590594419131,348.421592138480,348.232707322666,348.023920286188,347.795209306585,347.546550633311,347.277918497457,346.989285122316,346.680620734790,346.351893577651,346.003069922636,345.634114084403,345.244988435313,344.361855695820,341.235316010888,338.124468098101,335.027002160826,331.940680815281,328.863335602689,325.792863761566,322.727225241583,319.664439941914,316.602585158364,313.539793224774,310.474249335283,307.404189535047,304.327898867862,301.243709669967,298.150000000000];
@@ -22,85 +33,112 @@ T_stat_plot = [298.150000000000,298.150000000000,298.150000000000,298.1500000000
 
 %%%%%
 
-%% Comparar A y B (numerical + analitical)
-figure()
-hold on
-myplot(xx, T_apA_An)
-myplot1(x, T_apA_Num)
-myplot2(xx, T_apB_An)
-myplot3(x, T_apB_Num)
-
-axis([0 dx T_b*0.95 max(T_apA_An)*1.09])
-ylabel('{\it T} [K]')
-xlabel('{\it x} [m]');
-legend('Solución analítica, disipación uniforme', 'Solución numérica, disipación uniforme',...
-    'Solución analítica, disipación no uniforme', 'Solución numérica, disipación no uniforme')
-hold off
-
-%% Comparar B y D (numerical + analitical)
-figure()
-hold on
-myplot(xx, T_apB_An)
-myplot1(x, T_apB_Num)
-myplot2(x, T_apD_Num)
-
-axis([0 dx T_b*0.95 max(T_apB_An)*1.09])
-ylabel('{\it T} [K]')
-xlabel('{\it x} [m]');
-legend('Solución analítica, solo conducción', 'Solución numérica, solo conducción',...
-    'Solución numérica, radiación y conducción')
-hold off
-
-%% Comparar A y C (numerical + analitical)
-figure()
-hold on
-myplot(xx, T_apA_An)
-myplot1(x, T_apA_Num)
-% myplot2(x, T_apC_Num)
-myplot3(x, T_apC_An)
-axis([0 dx T_b*0.95 max(T_apA_Num)*1.09])
-ylabel('{\it T} [K]')
-xlabel('{\it x} [m]');
+% %% Comparar A y B (numerical + analitical)
+% figure()
+% hold on
+% myplot(xx, T_apA_An)
+% myplot1(x, T_apA_Num)
+% myplot2(xx, T_apB_An)
+% myplot3(x, T_apB_Num)
+% 
+% axis([0 dx T_b*0.95 max(T_apA_An)*1.09])
+% ylabel('{\it T} [K]')
+% xlabel('{\it x} [m]');
+% legend('Solución analítica, disipación uniforme', 'Solución numérica, disipación uniforme',...
+%     'Solución analítica, disipación no uniforme', 'Solución numérica, disipación no uniforme')
+% hold off
+% 
+% %% Comparar B y D (numerical + analitical)
+% figure()
+% hold on
+% myplot(xx, T_apB_An)
+% myplot1(x, T_apB_Num)
+% myplot2(x, T_apD_Num)
+% 
+% axis([0 dx T_b*0.95 max(T_apB_An)*1.09])
+% ylabel('{\it T} [K]')
+% xlabel('{\it x} [m]');
+% legend('Solución analítica, solo conducción', 'Solución numérica, solo conducción',...
+%     'Solución numérica, radiación y conducción')
+% hold off
+% 
+% %% Comparar A y C (numerical + analitical)
+% figure()
+% hold on
+% myplot(xx, T_apA_An)
+% myplot1(x, T_apA_Num)
+% % myplot2(x, T_apC_Num)
+% myplot3(x, T_apC_An)
+% axis([0 dx T_b*0.95 max(T_apA_Num)*1.09])
+% ylabel('{\it T} [K]')
+% xlabel('{\it x} [m]');
+% % legend('Solución analítica, solo conducción, disipación uniforme', 'Solución numérica, solo conducción, disipación uniforme',...
+% %     'Solución numérica, radiación y conducción, disipación uniforme', 'Solución analítica, radiación y conducción, disipación uniforme')
 % legend('Solución analítica, solo conducción, disipación uniforme', 'Solución numérica, solo conducción, disipación uniforme',...
-%     'Solución numérica, radiación y conducción, disipación uniforme', 'Solución analítica, radiación y conducción, disipación uniforme')
-legend('Solución analítica, solo conducción, disipación uniforme', 'Solución numérica, solo conducción, disipación uniforme',...
-    'Solución analítica, radiación y conducción, disipación uniforme')
-hold off
+%     'Solución analítica, radiación y conducción, disipación uniforme')
+% hold off
+% 
+% %% Comparar E(perfil central) con D
+% figure()
+% hold on
+% myplot(x, T_apD_Num)
+% myplot3(X, T_stat_plot_central)
+% axis([0 dx T_b*0.95 max(T_stat_plot_central)*1.06])
+% ylabel('{\it T} [K]')
+% xlabel('{\it x} [m]');
+% legend('Modelo 1D estacionario', 'Modelo 2D estacionario, perfil central')
+% hold off
+% 
+% %% Comparar E(perfil central) con D y con B
+% figure()
+% hold on
+% myplot(x, T_apD_Num)
+% myplot1(x, T_apB_Num)
+% myplot3(X, T_stat_plot_central)
+% 
+% axis([0 dx T_b*0.95 max(T_apB_Num)*1.04])
+% ylabel('{\it T} [K]')
+% xlabel('{\it x} [m]');
+% legend('Modelo 1D estacionario', 'Modelo 1D estacionario, solo conducción', 'Modelo 2D estacionario, perfil central')
+% hold off
+% 
+% %% Comparar E(perfil central) con D y  con C
+% figure()
+% hold on
+% myplot1(x, T_apC_An)
+% myplot(x, T_apD_Num)
+% myplot3(X, T_stat_plot_central)
+% axis([0 dx T_b*0.95 max(T_stat_plot_central)*1.06])
+% ylabel('{\it T} [K]')
+% xlabel('{\it x} [m]');
+% legend('Solución analítica 1D estacionario', 'Modelo 1D estacionario', 'Modelo 2D estacionario, perfil central')
+% hold off
 
-%% Comparar E(perfil central) con D
-figure()
-hold on
-myplot(x, T_apD_Num)
-myplot3(X, T_stat_plot_central)
-axis([0 dx T_b*0.95 max(T_stat_plot_central)*1.06])
-ylabel('{\it T} [K]')
-xlabel('{\it x} [m]');
-legend('Modelo 1D estacionario', 'Modelo 2D estacionario, perfil central')
-hold off
+%% transitory E
 
-%% Comparar E(perfil central) con D y con B
-figure()
-hold on
-myplot(x, T_apD_Num)
-myplot1(x, T_apB_Num)
-myplot3(X, T_stat_plot_central)
+T_stat_plot(:,:,1) = T_transit_PLOT( :,:,600 );
+T_stat_plot(:,:,2) = T_transit_PLOT( :,:,500 );
+T_stat_plot(:,:,3) = T_transit_PLOT( :,:,400 );
+T_stat_plot(:,:,4) = T_transit_PLOT( :,:,300 );
+T_stat_plot(:,:,5) = T_transit_PLOT( :,:,200 );
+T_stat_plot(:,:,6) = T_transit_PLOT( :,:,100 );
 
-axis([0 dx T_b*0.95 max(T_apB_Num)*1.04])
-ylabel('{\it T} [K]')
-xlabel('{\it x} [m]');
-legend('Modelo 1D estacionario', 'Modelo 1D estacionario, solo conducción', 'Modelo 2D estacionario, perfil central')
-hold off
 
-%% Comparar E(perfil central) con D y  con C
-figure()
-hold on
-myplot(x, T_apD_Num)
-myplot3(X, T_stat_plot_central)
-axis([0 dx T_b*0.95 max(T_stat_plot_central)*1.06])
-ylabel('{\it T} [K]')
-xlabel('{\it x} [m]');
-legend('Modelo 1D estacionario', 'Modelo 2D estacionario, perfil central')
-hold off
+
+
+subplot(2,3,1);contourf(X,Y,T_stat_plot(:,:,1)',15);xlabel('{\it x} [m]'); 
+ylabel('{\it y} [m]'); set(gca,'FontSize',18); colorbar; a = colorbar; a.Label.String = '{\it T} [K]';
+subplot(2,3,2);contourf(X,Y,T_stat_plot(:,:,2)',15);xlabel('{\it x} [m]'); 
+ylabel('{\it y} [m]'); set(gca,'FontSize',18); colorbar; a = colorbar; a.Label.String = '{\it T} [K]';
+subplot(2,3,3);contourf(X,Y,T_stat_plot(:,:,3)',15);xlabel('{\it x} [m]'); 
+ylabel('{\it y} [m]'); set(gca,'FontSize',18); colorbar; a = colorbar; a.Label.String = '{\it T} [K]';
+subplot(2,3,4);contourf(X,Y,T_stat_plot(:,:,4)',15);xlabel('{\it x} [m]'); 
+ylabel('{\it y} [m]'); set(gca,'FontSize',18); colorbar; a = colorbar; a.Label.String = '{\it T} [K]';
+subplot(2,3,5);contourf(X,Y,T_stat_plot(:,:,5)',15);xlabel('{\it x} [m]'); 
+ylabel('{\it y} [m]'); set(gca,'FontSize',18); colorbar; a = colorbar; a.Label.String = '{\it T} [K]';
+subplot(2,3,6);contourf(X,Y,T_stat_plot(:,:,6)',15);xlabel('{\it x} [m]'); 
+ylabel('{\it y} [m]'); set(gca,'FontSize',18); colorbar; a = colorbar; a.Label.String = '{\it T} [K]';                   
+          
 %% FUNCTIONS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plotting function
