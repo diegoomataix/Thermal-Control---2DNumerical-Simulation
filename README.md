@@ -1,2 +1,4 @@
 # Thermal-Control---2DNumerical-Simulation
  
+
+Del estudio de los fenómenos de transferencia de calor, tanto en términos de conducción como de radiación, surgen diversas opciones a la hora de modelizar un problema físico, cada una con un cierto nivel de complejidad. El estudio aquí desarrollado comprende el análisis de diversos modelos analíticos así como numéricos, para la resolución de la ecuación del calor para una tarjeta electrónica de uso espacial. Se realiza inicialmente una primera aproximación, considerando solo la transmisión de calor por conducción, pasando por la implementación de la radiación al problema, para finalmente desarrollar y resolver el modelo del problema térmico bidimensional a través del método de diferencias finitas. Finalmente, se comparan los resultados para determinar la eficacia de los métodos implementados en este estudio.
