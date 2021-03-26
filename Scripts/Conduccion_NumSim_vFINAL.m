@@ -13,11 +13,6 @@
 % PCB tiene contact termico perfecto con paredes permanentemente a 25C, los
 % otros dos bordes están térmicamente aislados.
 %
-% TO DO:
-% - ADD CENTRAL PROFILE COMPARISON @Y=MX/2 IN E WITH ANSWERS FROM D (PLOT)
-% - VALIDATE NUMERICAL MODEL WITH A & C
-% - PLOT IN THE SAME GRAPH A & B (NUM&ANALYTICAL); AND C&D
-%   (NUM&ANALYTICAL); AND B & D (NUMERICAL)
 %___________________________________________________________________________
 close all; clear all; clc;
 %___________________________________________________________________________
@@ -26,7 +21,7 @@ Conduccion_NumSim_DATOS
 %___________________________________________________________________________
 %% Choose exercise to run
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-choose = 'b';       % 'a', 'b', 'c', 'd' & 'e' %
+choose = 'e';       % 'a', 'b', 'c', 'd' & 'e' %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %___________________________________________________________________________
 %% Define global parameters
@@ -211,7 +206,7 @@ switch(choose)
         % Resolver el caso anterior pero sin linealizar y con la disipación no uniforme.
     case 'd'
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        validate = 2;       % 1: Uniform dissipation    % 2: Non-uniform dissipation
+        validate = 1;       % 1: Uniform dissipation    % 2: Non-uniform dissipation
         radiation = 1;      % 1: Include radiation      % 2: Do not include radiation
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         h=0;                % Convective coefficient [W/(m^2·K)] (NO CONVECTION)
@@ -241,7 +236,7 @@ switch(choose)
                     V(i) = dx * dz * dy;
                     C(i) =  C_eff;
                 end
-                
+
             case 2
                 %%% NO IC %%%
                 for i = 1:lim(1)
@@ -292,11 +287,11 @@ switch(choose)
         phDT = ones(N,M);
         T=T_b*ones(N,M); 	% Temperature-matrix (times from 1 to n, and positions from 1 to M+1)
         %%% plot parameters for heat equation
-        subplot(2,3,1);myplot(X,phi); ylabel('{\it \phi} [W/{m^{3}}]'); xlabel('{\it x} [m]'); 
-        subplot(2,3,2);myplot(X,k); ylabel('{\it k_{eff}} [W/{(m·K)}]'); xlabel('{\it x} [m]');  
+        subplot(2,3,1);myplot(X,phi); ylabel('{\it \phi} [W/{m^{3}}]'); xlabel('{\it x} [m]');
+        subplot(2,3,2);myplot(X,k); ylabel('{\it k_{eff}} [W/{(m·K)}]'); xlabel('{\it x} [m]');
         subplot(2,3,3);myplot(X,A_vect); ylabel('{\it A} [m^2]');  xlabel('{\it x} [m]');
-        subplot(2,3,4); myplot(X,V); ylabel('{\it V} [m^3]'); xlabel('{\it x} [m]'); 
-        subplot(2,3,5);myplot(X,C); ylabel('{\it C} [J/K]'); xlabel('{\it x} [m]'); 
+        subplot(2,3,4); myplot(X,V); ylabel('{\it V} [m^3]'); xlabel('{\it x} [m]');
+        subplot(2,3,5);myplot(X,C); ylabel('{\it C} [J/K]'); xlabel('{\it x} [m]');
         %%% Check for stability of the explicit finite difference method %%
         for i = 1:M
             Fo_vect(i)=k(i)/(C(i)/V(i))*Dt/(Dx*Dx);         % Fourier's number
@@ -512,7 +507,7 @@ switch(choose)
         T_stat_plot_central = T(:,(My/2),N);
         % Transitory simulation matrix
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        sim = 'y';      % 'y': Save an animation of transitory phase
+        sim = 'n';      % 'y': Save an animation of transitory phase
         sim_frames = 600;% choose number of frames for the simulation
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         switch(sim)
