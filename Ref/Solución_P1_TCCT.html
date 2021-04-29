@@ -1,0 +1,650 @@
+<html data-darkreader-mode="dynamic" data-darkreader-scheme="dark"><head><style class="darkreader darkreader--fallback" media="screen"></style><style class="darkreader darkreader--text" media="screen"></style><style class="darkreader darkreader--invert" media="screen">.jfk-bubble.gtx-bubble, .captcheck_answer_label > input + img, span#closed_text > img[src^="https://www.gstatic.com/images/branding/googlelogo"], span[data-href^="https://www.hcaptcha.com/"] > #icon, #bit-notification-bar-iframe, embed[type="application/pdf"] {
+    filter: invert(100%) hue-rotate(180deg) contrast(90%) !important;
+}</style><style class="darkreader darkreader--inline" media="screen">[data-darkreader-inline-bgcolor] {
+  background-color: var(--darkreader-inline-bgcolor) !important;
+}
+[data-darkreader-inline-bgimage] {
+  background-image: var(--darkreader-inline-bgimage) !important;
+}
+[data-darkreader-inline-border] {
+  border-color: var(--darkreader-inline-border) !important;
+}
+[data-darkreader-inline-border-bottom] {
+  border-bottom-color: var(--darkreader-inline-border-bottom) !important;
+}
+[data-darkreader-inline-border-left] {
+  border-left-color: var(--darkreader-inline-border-left) !important;
+}
+[data-darkreader-inline-border-right] {
+  border-right-color: var(--darkreader-inline-border-right) !important;
+}
+[data-darkreader-inline-border-top] {
+  border-top-color: var(--darkreader-inline-border-top) !important;
+}
+[data-darkreader-inline-boxshadow] {
+  box-shadow: var(--darkreader-inline-boxshadow) !important;
+}
+[data-darkreader-inline-color] {
+  color: var(--darkreader-inline-color) !important;
+}
+[data-darkreader-inline-fill] {
+  fill: var(--darkreader-inline-fill) !important;
+}
+[data-darkreader-inline-stroke] {
+  stroke: var(--darkreader-inline-stroke) !important;
+}
+[data-darkreader-inline-outline] {
+  outline-color: var(--darkreader-inline-outline) !important;
+}
+[data-darkreader-inline-stopcolor] {
+  stop-color: var(--darkreader-inline-stopcolor) !important;
+}</style><style class="darkreader darkreader--variables" media="screen">:root {
+   --darkreader-neutral-background: #131516;
+   --darkreader-neutral-text: #d8d4cf;
+   --darkreader-selection-background: #004daa;
+   --darkreader-selection-text: #e8e6e3;
+}</style><style class="darkreader darkreader--root-vars" media="screen"></style><script class="darkreader darkreader--proxy">(function injectProxy() {
+        document.dispatchEvent(new CustomEvent('__darkreader__inlineScriptsAllowed'));
+        const addRuleDescriptor = Object.getOwnPropertyDescriptor(CSSStyleSheet.prototype, 'addRule');
+        const insertRuleDescriptor = Object.getOwnPropertyDescriptor(CSSStyleSheet.prototype, 'insertRule');
+        const deleteRuleDescriptor = Object.getOwnPropertyDescriptor(CSSStyleSheet.prototype, 'deleteRule');
+        const removeRuleDescriptor = Object.getOwnPropertyDescriptor(CSSStyleSheet.prototype, 'removeRule');
+        const shouldWrapDocStyleSheets = location.hostname.endsWith('pushbullet.com');
+        const documentStyleSheetsDescriptor = shouldWrapDocStyleSheets ? Object.getOwnPropertyDescriptor(Document.prototype, 'styleSheets') : null;
+        const cleanUp = () => {
+            Object.defineProperty(CSSStyleSheet.prototype, 'addRule', addRuleDescriptor);
+            Object.defineProperty(CSSStyleSheet.prototype, 'insertRule', insertRuleDescriptor);
+            Object.defineProperty(CSSStyleSheet.prototype, 'deleteRule', deleteRuleDescriptor);
+            Object.defineProperty(CSSStyleSheet.prototype, 'removeRule', removeRuleDescriptor);
+            document.removeEventListener('__darkreader__cleanUp', cleanUp);
+            document.removeEventListener('__darkreader__addUndefinedResolver', addUndefinedResolver);
+            if (shouldWrapDocStyleSheets) {
+                Object.defineProperty(Document.prototype, 'styleSheets', documentStyleSheetsDescriptor);
+            }
+        };
+        const addUndefinedResolver = (e) => {
+            customElements.whenDefined(e.detail.tag).then(() => {
+                document.dispatchEvent(new CustomEvent('__darkreader__isDefined', { detail: { tag: e.detail.tag } }));
+            });
+        };
+        document.addEventListener('__darkreader__cleanUp', cleanUp);
+        document.addEventListener('__darkreader__addUndefinedResolver', addUndefinedResolver);
+        const updateSheetEvent = new Event('__darkreader__updateSheet');
+        function proxyAddRule(selector, style, index) {
+            addRuleDescriptor.value.call(this, selector, style, index);
+            if (this.ownerNode && !this.ownerNode.classList.contains('darkreader')) {
+                this.ownerNode.dispatchEvent(updateSheetEvent);
+            }
+            return -1;
+        }
+        function proxyInsertRule(rule, index) {
+            const returnValue = insertRuleDescriptor.value.call(this, rule, index);
+            if (this.ownerNode && !this.ownerNode.classList.contains('darkreader')) {
+                this.ownerNode.dispatchEvent(updateSheetEvent);
+            }
+            return returnValue;
+        }
+        function proxyDeleteRule(index) {
+            deleteRuleDescriptor.value.call(this, index);
+            if (this.ownerNode && !this.ownerNode.classList.contains('darkreader')) {
+                this.ownerNode.dispatchEvent(updateSheetEvent);
+            }
+        }
+        function proxyRemoveRule(index) {
+            removeRuleDescriptor.value.call(this, index);
+            if (this.ownerNode && !this.ownerNode.classList.contains('darkreader')) {
+                this.ownerNode.dispatchEvent(updateSheetEvent);
+            }
+        }
+        function proxyDocumentStyleSheets() {
+            const docSheets = documentStyleSheetsDescriptor.get.call(this);
+            const filtered = [...docSheets].filter((styleSheet) => {
+                return !styleSheet.ownerNode.classList.contains('darkreader');
+            });
+            return Object.setPrototypeOf(filtered, StyleSheetList.prototype);
+        }
+        Object.defineProperty(CSSStyleSheet.prototype, 'addRule', Object.assign({}, addRuleDescriptor, { value: proxyAddRule }));
+        Object.defineProperty(CSSStyleSheet.prototype, 'insertRule', Object.assign({}, insertRuleDescriptor, { value: proxyInsertRule }));
+        Object.defineProperty(CSSStyleSheet.prototype, 'deleteRule', Object.assign({}, deleteRuleDescriptor, { value: proxyDeleteRule }));
+        Object.defineProperty(CSSStyleSheet.prototype, 'removeRule', Object.assign({}, removeRuleDescriptor, { value: proxyRemoveRule }));
+        if (shouldWrapDocStyleSheets) {
+            Object.defineProperty(Document.prototype, 'styleSheets', Object.assign({}, documentStyleSheetsDescriptor, { get: proxyDocumentStyleSheets }));
+        }
+    })()</script><style class="darkreader darkreader--user-agent" media="screen">html {
+    background-color: #181a1b !important;
+}
+html, body, input, textarea, select, button {
+    background-color: #181a1b;
+}
+html, body, input, textarea, select, button {
+    border-color: #736b5e;
+    color: #e8e6e3;
+}
+a {
+    color: #3391ff;
+}
+table {
+    border-color: #545b5e;
+}
+::placeholder {
+    color: #b2aba1;
+}
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    background-color: #555b00 !important;
+    color: #e8e6e3 !important;
+}
+::-webkit-scrollbar {
+    background-color: #202324;
+    color: #aba499;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #454a4d;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: #575e62;
+}
+::-webkit-scrollbar-thumb:active {
+    background-color: #484e51;
+}
+::-webkit-scrollbar-corner {
+    background-color: #181a1b;
+}
+* {
+    scrollbar-color: #454a4d #202324;
+}
+::selection {
+    background-color: #004daa !important;
+    color: #e8e6e3 !important;
+}
+::-moz-selection {
+    background-color: #004daa !important;
+    color: #e8e6e3 !important;
+}</style>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>p981.html</title>
+<!-- Created by Maple 2020.1, Windows 10 -->
+<meta name="darkreader" content="2fced4311c4cbc0e04bd89afe448125e"><style class="darkreader darkreader--override" media="screen">.vimvixen-hint {
+    background-color: #7b5300 !important;
+    border-color: #d8b013 !important;
+    color: #f3e8c8 !important;
+}
+::placeholder {
+    opacity: 0.5 !important;
+}
+a[href="https://coinmarketcap.com/"] > svg[width="94"][height="16"] > path {
+    fill: var(--darkreader-neutral-text) !important;
+}
+#edge-translate-panel-body {
+    color: var(--darkreader-neutral-text) !important;
+}</style></head>
+<body style="--darkreader-inline-bgcolor:#181a1b;" data-darkreader-inline-bgcolor="" bgcolor="FFFFFF"><a name="MapleAutoBookmark1">
+
+
+<p align="left"><table>
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>&gt; </strong></font></td>
+<td valign="top"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>restart:#"m11_p98"</strong></font></td>
+</tr>
+</tbody></table>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">Considérese
+ una tarjeta electrónica (PCB) de 1401001,5 mm3 de FR-4, con un 
+recubrimiento de 50 m de cobre por cada lado, que en una de las caras 
+es continuo, y en la otra sólo ocupa el 10% de la superficie, en la cual
+ van montados tres circuitos integrados (IC), cada uno de 50203 mm3, 
+disipando 5 W, con kIC=50 W/(m·K) de conductividad térmica, y CIC=20 J/K
+ de capacidad térmica, y distribuidos uniformemente en la PCB (20 mm de 
+separación entre ellos). Se supondrá que los lados cortos de la PCB 
+tienen contacto térmico perfecto con paredes permanentemente a 25 ºC, y 
+que los otros dos bordes están térmicamente aislados. Tómese para el 
+FR-4 k=0,5 W/(m·K) en el plano y la mitad a su través. Se pide:
+<br>a)	Considerando que la tarjeta sólo evacua calor por los bordes, 
+determinar la temperatura máxima que se alcanzaría si toda la disipación
+ estuviese uniformemente repartida en la PCB y los IC no influyeran.
+<br>b)	Considerando que la tarjeta sólo evacua calor por los bordes, 
+determinar la temperatura máxima que se alcanzaría con un modelo 
+unidimensional en el que los IC llegaran hasta los bordes aislados, en 
+el límite kIC, y con la kIC dada.
+<br>c)	Considerando que se transmite calor por radiación, con una 
+emisividad media de 0,7 por el lado de los componentes, y de 0,5 por la 
+cara opuesta, con una caja electrónica que se puede suponer negra y a 45
+ ºC, determinar la temperatura máxima linealizando las pérdidas 
+radiativas y con disipación uniforme.
+<br>d)	Resolver el caso anterior pero sin linealizar y con la disipación no uniforme. 
+<br>e)	Resolver el problema térmico bidimensional estacionario y 
+comparar el perfil central de temperaturas con el del caso anterior.
+<br>Data:</font>
+</p><p align="left"><table>
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>&gt; </strong></font></td>
+<td valign="top"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>read"../therm_eq.m":read"../therm_proc.m":with(therm_proc):interface(displayprecision=2):interface(rtablesize=infinity):</strong></font></td>
+</tr>
+</tbody></table>
+</p><p align="left"><table>
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>&gt; </strong></font></td>
+<td valign="top"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>su1:="FR4":su2:="Cobre":dat:=[Lx=0.07*m_,Ly=0.1*m_,Lz=1.5e-3*m_,Lcu=50e-6*m_,f=0.1,Li1=0.02*m_,Li2=0.04*m_,Li3=0.06*m_,Lxic=0.02*m_,Lyic=0.04*m_,Lzic=3e-3*m_,Wic=5*W_,kic=50*W_/(m_*K_),Cic=20*J_/K_,Tb=(25+273.15)*K_,T0=(25+273.15)*K_,Tw=(45+273.15)*K_,epsilon1=0.7,epsilon2=0.5];To:=273.15:</strong></font></td>
+</tr>
+</tbody></table>
+</p><p align="center"><table width="100%">
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_1.gif" alt="[Lx = `+`(`*`(0.7e-1, `*`(m_))), Ly = `+`(`*`(.1, `*`(m_))), Lz = `+`(`*`(0.15e-2, `*`(m_))), Lcu = `+`(`*`(0.50e-4, `*`(m_))), f = .1, Li1 = `+`(`*`(0.2e-1, `*`(m_))), Li2 = `+`(`*`(0.4e-1, `*`(m_)))..." width="768" height="28" border="0" align="middle"><br><img src="Soluci%C3%B3n_P1_TCCT_files/p98_2.gif" alt="[Lx = `+`(`*`(0.7e-1, `*`(m_))), Ly = `+`(`*`(.1, `*`(m_))), Lz = `+`(`*`(0.15e-2, `*`(m_))), Lcu = `+`(`*`(0.50e-4, `*`(m_))), f = .1, Li1 = `+`(`*`(0.2e-1, `*`(m_))), Li2 = `+`(`*`(0.4e-1, `*`(m_)))..." width="768" height="28" border="0" align="middle"></font></td>
+</tr>
+</tbody></table>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">La
+ simetría permite resolver solo la mitad (o la cuarta parte del área en 
+2D). No parece muy bueno el modelo 1D porque los IC no son muy largos.</font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">F=FR-4, C=Cobre.</font>
+</p><p align="left"><table>
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>&gt; </strong></font></td>
+<td valign="top"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>datF:=rho=1850*kg_/m_^3,c=700*J_/(kg_*K_),k=0.5*W_/(m_*K_),kt=0.25*W_/(m_*K_);datC:=get_sol_data(su2);dat:=op(dat),Const,SI2,SI1:</strong></font></td>
+</tr>
+</tbody></table>
+</p><p align="center"><p align="center"></p><table width="100%">
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_3.gif" alt="rho = `+`(`/`(`*`(1850, `*`(kg_)), `*`(`^`(m_, 3)))), c = `+`(`/`(`*`(700, `*`(J_)), `*`(kg_, `*`(K_)))), k = `+`(`/`(`*`(.5, `*`(W_)), `*`(m_, `*`(K_)))), kt = `+`(`/`(`*`(.25, `*`(W_)), `*`(m_, `*`(..." width="429" height="42" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_4.gif" alt="T[f] = `+`(`*`(1355., `*`(K_))), rho = `+`(`/`(`*`(8910., `*`(kg_)), `*`(`^`(m_, 3)))), c = `+`(`/`(`*`(390., `*`(J_)), `*`(kg_, `*`(K_)))), k = `+`(`/`(`*`(393., `*`(W_)), `*`(m_, `*`(K_)))), alpha =..." width="611" height="42" border="0" align="middle"></font></td>
+</tr>
+</tbody></table>
+</p><p align="center"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_5.gif" alt="Image" width="254" height="233" border="0" align="middle"></font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">a)
+	Considerando que la tarjeta sólo evacua calor por los bordes, 
+determinar la temperatura máxima que se alcanzaría si toda la disipación
+ estuviese uniformemente repartida en la PCB y los IC no influyeran.</font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">Se trata de un problema 1D con phi=cte, cuya solución es parabólica con T(0)=Tb y Tp(L)=0:</font>
+</p><p align="left"><table>
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>&gt; </strong></font></td>
+<td valign="top"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>eqBE:=rho*c*Diff(T(x,t),t)=k*Diff(T(x,t),x,x)+phi;eqBEst:=0=k*Diff(T(x),x,x)+phi;eqT:=T=Tb+(phi*L/k)*x-(phi/(2*k))*x^2;phi=3*Wic/(2*Lx*Ly*Lz);eqphi:=subs(dat,%);eqkeff:=k=Sum(k[i]*f[i]*delta[i],i)/Sum(delta[i],i);eqkeff:=k=(kC*f*Lcu+kF*(Lz-2*Lcu)+kC*Lcu)/(Lz);eqkeff_:=k=subs(kC=k,datC,kF=k,datF,dat,rhs(%));Tb_L_k_phi:=subs(dat,Tb),subs(dat,Lx),rhs(eqkeff_),subs(SI0,rhs(eqphi))*W_/m_^3;plot(subs(eqkeff_,eqphi,L=Lx,dat,SI0,rhs(eqT))-To,x=0..subs(dat,SI0,Lx),T_C=0..150);Tm:=subs(x=L,rhs(eqT));Tm_:=subs(eqkeff_,eqphi,L=Lx,dat,%);'Tm_'=TKC(%);eqCheck:=3*Wic=2*k*As*Tp0;As=Ly*Lz;As_:=subs(dat,Ly*Lz);Tp0=phi*L/k;Tp0_:=subs(eqkeff_,eqphi,dat,phi*Lx/k);eqCheck_:=subs(eqkeff_,Tp0=Tp0_,As=As_,dat,eqCheck);</strong></font></td>
+</tr>
+</tbody></table>
+</p><p align="center"><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><table width="100%">
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_6.gif" alt="`*`(rho, `*`(c, `*`(Diff(T(x, t), t)))) = `+`(`*`(k, `*`(Diff(T(x, t), x, x))), phi)" width="333" height="44" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_7.gif" alt="0 = `+`(`*`(k, `*`(Diff(T(x), x, x))), phi)" width="230" height="47" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_8.gif" alt="T = `+`(Tb, `/`(`*`(phi, `*`(L, `*`(x))), `*`(k)), `-`(`/`(`*`(`/`(1, 2), `*`(phi, `*`(`^`(x, 2)))), `*`(k))))" width="238" height="43" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_9.gif" alt="phi = `+`(`/`(`*`(`/`(3, 2), `*`(Wic)), `*`(Lx, `*`(Ly, `*`(Lz)))))" width="122" height="36" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_10.gif" alt="phi = `+`(`/`(`*`(714285.7145, `*`(kg_)), `*`(m_, `*`(`^`(s_, 3)))))" width="186" height="47" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_11.gif" alt="k = `/`(`*`(Sum(`*`(k[i], `*`(f[i], `*`(delta[i]))), i)), `*`(Sum(delta[i], i)))" width="159" height="81" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_12.gif" alt="k = `/`(`*`(`+`(`*`(kC, `*`(f, `*`(Lcu))), `*`(kF, `*`(`+`(Lz, `-`(`*`(2, `*`(Lcu)))))), `*`(kC, `*`(Lcu)))), `*`(Lz))" width="347" height="36" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_13.gif" alt="k = `+`(`/`(`*`(14.87666667, `*`(W_)), `*`(m_, `*`(K_))))" width="174" height="36" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_14.gif" alt="`+`(`*`(298.15, `*`(K_))), `+`(`*`(0.7e-1, `*`(m_))), `+`(`/`(`*`(14.87666667, `*`(W_)), `*`(m_, `*`(K_)))), `+`(`/`(`*`(714285.7145, `*`(W_)), `*`(`^`(m_, 3))))" width="408" height="47" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_15.gif" alt="Plot_2d" width="498" height="170" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_16.gif" alt="`+`(Tb, `/`(`*`(`/`(1, 2), `*`(phi, `*`(`^`(L, 2)))), `*`(k)))" width="152" height="43" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_17.gif" alt="`+`(`*`(415.7838786, `*`(K_)))" width="131" height="17" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_18.gif" alt="Tm_ = `+`(`*`(142.6338786, `*`(�C)))" width="117" height="17" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_19.gif" alt="`+`(`*`(3, `*`(Wic))) = `+`(`*`(2, `*`(k, `*`(As, `*`(Tp0)))))" width="208" height="17" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_20.gif" alt="As = `*`(Ly, `*`(Lz))" width="78" height="17" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_21.gif" alt="`+`(`*`(0.15e-3, `*`(`^`(m_, 2))))" width="118" height="22" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_22.gif" alt="Tp0 = `/`(`*`(phi, `*`(L)), `*`(k))" width="82" height="40" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_23.gif" alt="`+`(`/`(`*`(3360.967959, `*`(K_)), `*`(m_)))" width="153" height="36" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_24.gif" alt="`+`(`*`(15, `*`(W_))) = `+`(`*`(15.00000000, `*`(W_)))" width="213" height="17" border="0" align="middle"></font></td>
+</tr>
+</tbody></table>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">i.e.
+ sería Tmax=143 ºC (demasiado alta para los IC y la PCB), si los 15 W 
+estuviesen uniformemente repartidos. Y hemos verificado que toda la 
+disipación sale por los extremos.</font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000"></font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">b)
+	Considerando que la tarjeta sólo evacua calor por los bordes, 
+determinar la temperatura máxima que se alcanzaría con un modelo 
+unidimensional en el que los IC llegaran hasta los bordes aislados, en 
+el límite kIC, y con la kIC dada.</font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">Ahora
+ T(x) será continua a trozos, con tramos rectos donde no hay IC, y 
+tramos horizontales (si k=inf) o parabólicos sobre los IC.</font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">Caso kic=inf.</font>
+</p><p align="left"><table>
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>&gt; </strong></font></td>
+<td valign="top"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>eqTs:=piecewise(x&lt;Li1,Tb+(Ti1-Tb)*(x/Li1),x&gt;Li1
+ and x&lt;Li2,Ti1,x&gt;Li2 and 
+x&lt;Li3,Ti2+(Ti3-Ti2)*(x-Li2)/(Li3-Li2),x&gt;Li3 and 
+x&lt;Lx,Ti3);eqQi1:=k*As*(Ti1-Tb)/Li1=Wic+k*As*(Ti3-Ti2)/(Li3-Li2);Ti2=Ti1;eqQi2:=k*As*(Ti3-Ti2)/(Li3-Li2)=Wic/2;sol:=expand(solve(subs(Ti2=Ti1,{eqQi1,eqQi2}),{Ti1,Ti3}));sol_:=subs(eqkeff_,eqphi,As=As_,dat,sol);subs(Ti2=Ti1,sol_,eqkeff_,As=As_,dat,SI0,eqTs);plot(%-To,x=0..subs(dat,SI0,Lx),T_C=0..150);Tm_:=TKC(subs(sol_,Ti3));</strong></font></td>
+</tr>
+</tbody></table>
+</p><p align="center"><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><table width="100%">
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_25.gif" alt="piecewise(`&lt;`(x, Li1), `+`(Tb, `/`(`*`(`+`(Ti1, `-`(Tb)), `*`(x)), `*`(Li1))), `and`(`&lt;`(Li1, x), `&lt;`(x, Li2)), Ti1, `and`(`&lt;`(Li2, x), `&lt;`(x, Li3)), `+`(Ti2, `/`(`*`(`+`(Ti3, `-`(Ti2)), `*`(`+`(x, `-..." width="448" height="147" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_26.gif" alt="`/`(`*`(k, `*`(As, `*`(`+`(Ti1, `-`(Tb))))), `*`(Li1)) = `+`(Wic, `/`(`*`(k, `*`(As, `*`(`+`(Ti3, `-`(Ti2))))), `*`(`+`(Li3, `-`(Li2)))))" width="364" height="36" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_27.gif" alt="Ti2 = Ti1" width="70" height="17" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_28.gif" alt="`/`(`*`(k, `*`(As, `*`(`+`(Ti3, `-`(Ti2))))), `*`(`+`(Li3, `-`(Li2)))) = `+`(`*`(`/`(1, 2), `*`(Wic)))" width="255" height="36" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_29.gif" alt="{Ti1 = `+`(Tb, `/`(`*`(`/`(3, 2), `*`(Wic, `*`(Li1))), `*`(k, `*`(As)))), Ti3 = `+`(Tb, `/`(`*`(`/`(3, 2), `*`(Wic, `*`(Li1))), `*`(k, `*`(As))), `-`(`/`(`*`(`/`(1, 2), `*`(Wic, `*`(Li2))), `*`(k, `*`..." width="586" height="36" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_30.gif" alt="{Ti1 = `+`(`*`(365.3693592, `*`(K_))), Ti3 = `+`(`*`(387.7758122, `*`(K_)))}" width="292" height="17" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_31.gif" alt="piecewise(`&lt;`(x, 0.2e-1), `+`(298.15, `*`(3360.967960, `*`(x))), `and`(`&lt;`(0.2e-1, x), `&lt;`(x, 0.4e-1)), 365.3693592, `and`(`&lt;`(0.4e-1, x), `&lt;`(x, 0.6e-1)), `+`(320.5564532, `*`(1120.322650, `*`(x))), ..." width="337" height="109" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_32.gif" alt="Plot_2d" width="496" height="160" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_33.gif" alt="`+`(`*`(114.6258122, `*`(�C)))" width="127" height="17" border="0" align="middle"></font></td>
+</tr>
+</tbody></table>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">i.e. con kic=infinito solo se alcanzarían 115 ºC</font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">Caso kic=50 W/(m·K). Pero hay que calcular la keff para Lz bajo los IC. Si mantenemos el área de paso, la keff será:</font>
+</p><p align="left"><table>
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>&gt; </strong></font></td>
+<td valign="top"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>eqkeffIC:=kIC=(kic*Lzic+kC*f*Lcu+kF*(Lz-2*Lcu)+kC*Lcu)/(Lz+2*Lcu);eqkeffIC_:=kIC=subs(kC=k,datC,kF=k,datF,dat,rhs(%));T12:=Ti1+a*(x-Li1)-(phiIC/(2*kIC))*(x-Li1)^2;eqTs:=piecewise(x&lt;Li1,Tb+(Ti1-Tb)*(x/Li1),x&gt;Li1
+ and x&lt;Li2,T12,x&gt;Li2 and 
+x&lt;Li3,Ti2+(Ti3-Ti2)*(x-Li2)/(Li3-Li2),x&gt;Li3 and 
+x&lt;Lx,Ti3+phi*(Lx-Li3)*(x-Li3)/kIC-phi*(x-Li3)^2/(2*kIC));</strong></font></td>
+</tr>
+</tbody></table>
+</p><p align="center"><p align="center"></p><p align="center"></p><p align="center"></p><table width="100%">
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_34.gif" alt="kIC = `/`(`*`(`+`(`*`(kic, `*`(Lzic)), `*`(kC, `*`(f, `*`(Lcu))), `*`(kF, `*`(`+`(Lz, `-`(`*`(2, `*`(Lcu)))))), `*`(kC, `*`(Lcu)))), `*`(`+`(Lz, `*`(2, `*`(Lcu)))))" width="445" height="36" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_35.gif" alt="kIC = `+`(`/`(`*`(107.6968750, `*`(W_)), `*`(m_, `*`(K_))))" width="213" height="36" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_36.gif" alt="`+`(Ti1, `*`(a, `*`(`+`(x, `-`(Li1)))), `-`(`/`(`*`(`/`(1, 2), `*`(phiIC, `*`(`^`(`+`(x, `-`(Li1)), 2)))), `*`(kIC))))" width="337" height="42" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_37.gif" alt="piecewise(`&lt;`(x, Li1), `+`(Tb, `/`(`*`(`+`(Ti1, `-`(Tb)), `*`(x)), `*`(Li1))), `and`(`&lt;`(Li1, x), `&lt;`(x, Li2)), `+`(Ti1, `*`(a, `*`(`+`(x, `-`(Li1)))), `-`(`/`(`*`(`/`(1, 2), `*`(phiIC, `*`(`^`(`+`(x,..." width="588" height="195" border="0" align="middle"></font></td>
+</tr>
+</tbody></table>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">Tenemos 4 incógnitas: Ti1,Ti2,Ti3 y a. Las 4 condiciones son:</font>
+</p><p align="left"><table>
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>&gt; </strong></font></td>
+<td valign="top"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>eqQi1:=k*As*(Ti1-Tb)/Li1=Wic+k*As*(Ti3-Ti2)/(Li3-Li2);eqQi3:=k*As*(Ti3-Ti2)/(Li3-Li2)=Wic/2;eqTi2:=Ti2=subs(x=Li2,T12);eqQi2:=k*As*subs(x=Li1,diff(rhs(eqT),x))=subs(x=Li1,kIC*As*diff(T12,x));phiIC:=Wic/(Lxic*Ly*Lz);phiIC_:=subs(dat,%);eqphiss:=piecewise(x&gt;Li1
+ and x&lt;Li2,phiIC,x&gt;Li3 and 
+x&lt;Lx,phiIC,0);plot(subs(dat,SI0,eqphiss),x=0..subs(dat,SI0,Lx),phi_W_m3=0..2e6);</strong></font></td>
+</tr>
+</tbody></table>
+</p><p align="center"><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><table width="100%">
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_38.gif" alt="`/`(`*`(k, `*`(As, `*`(`+`(Ti1, `-`(Tb))))), `*`(Li1)) = `+`(Wic, `/`(`*`(k, `*`(As, `*`(`+`(Ti3, `-`(Ti2))))), `*`(`+`(Li3, `-`(Li2)))))" width="364" height="36" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_39.gif" alt="`/`(`*`(k, `*`(As, `*`(`+`(Ti3, `-`(Ti2))))), `*`(`+`(Li3, `-`(Li2)))) = `+`(`*`(`/`(1, 2), `*`(Wic)))" width="255" height="36" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_40.gif" alt="Ti2 = `+`(Ti1, `*`(a, `*`(`+`(Li2, `-`(Li1)))), `-`(`/`(`*`(`/`(1, 2), `*`(phiIC, `*`(`^`(`+`(Li2, `-`(Li1)), 2)))), `*`(kIC))))" width="413" height="42" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_41.gif" alt="`*`(k, `*`(As, `*`(`+`(`/`(`*`(phi, `*`(L)), `*`(k)), `-`(`/`(`*`(phi, `*`(Li1)), `*`(k))))))) = `*`(kIC, `*`(As, `*`(a)))" width="289" height="40" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_42.gif" alt="`/`(`*`(Wic), `*`(Lxic, `*`(Ly, `*`(Lz))))" width="150" height="36" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_43.gif" alt="`+`(`/`(`*`(1666666.667, `*`(kg_)), `*`(m_, `*`(`^`(s_, 3)))))" width="173" height="47" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_44.gif" alt="piecewise(`and`(`&lt;`(Li1, x), `&lt;`(x, Li2)), `/`(`*`(Wic), `*`(Lxic, `*`(Ly, `*`(Lz)))), `and`(`&lt;`(Li3, x), `&lt;`(x, Lx)), `/`(`*`(Wic), `*`(Lxic, `*`(Ly, `*`(Lz)))), 0)" width="344" height="118" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_45.gif" alt="Plot_2d" width="496" height="134" border="0" align="middle"></font></td>
+</tr>
+</tbody></table>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">y la solución es:</font>
+</p><p align="left"><table>
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>&gt; </strong></font></td>
+<td valign="top"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>sol_:=solve(subs(eqkeffIC_,eqkeff_,phi=phiIC_,As=As_,L=Lx,dat,SI0,{eqQi1,eqQi2,eqQi3,eqTi2}),{Ti1,Ti2,Ti3,a});eqTs_:=subs(sol_,eqkeffIC_,eqkeff_,phi=phiIC_,As=As_,L=Lx,dat,SI0,eqTs);plot(%-To,x=0..subs(dat,SI0,Lx),T_C=0..150);Tm_:=eval(subs(x=Lx-1e-6,dat,SI0,eqTs_))*K_;'Tm_'=TKC(%);</strong></font></td>
+</tr>
+</tbody></table>
+</p><p align="center"><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><table width="100%">
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_46.gif" alt="{Ti1 = 365.3693592, Ti2 = 377.7497865, Ti3 = 400.1562396, a = 773.7767074}" width="410" height="17" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_47.gif" alt="piecewise(`&lt;`(x, 0.2e-1), `+`(298.15, `*`(3360.967960, `*`(x))), `and`(`&lt;`(0.2e-1, x), `&lt;`(x, 0.4e-1)), `+`(349.8938250, `*`(773.7767074, `*`(x)), `-`(`*`(7737.767070, `*`(`^`(`+`(x, `-`(0.2e-1)), 2))..." width="541" height="117" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_48.gif" alt="Plot_2d" width="498" height="167" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_49.gif" alt="`+`(`*`(400.9300162, `*`(K_)))" width="131" height="17" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_50.gif" alt="Tm_ = `+`(`*`(127.7800162, `*`(�C)))" width="117" height="17" border="0" align="middle"></font></td>
+</tr>
+</tbody></table>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">i.e. la Tmax es 128 ºC, que para kIC=infinito era 115 ºC. Todavía muy alta.</font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000"></font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">c)
+	Considerando que se transmite calor por radiación, con una emisividad 
+media de 0,7 por el lado de los componentes, y de 0,5 por la cara 
+opuesta, con una caja electrónica que se puede suponer negra y a 45 ºC, 
+determinar la temperatura máxima linealizando las pérdidas radiativas y 
+con disipación uniforme.</font>
+</p></a><p align="left"><a name="MapleAutoBookmark1"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">En este caso existe solución analítica (</font></a><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000"><a href="http://imartinez.etsiae.upm.es/~isidoro/bk3/c11/Heat%20conduction.pdf"></a></font><a href="http://imartinez.etsiae.upm.es/~isidoro/bk3/c11/Heat%20conduction.pdf"><font style="--darkreader-inline-color:#72ffff;" data-darkreader-inline-color="" size="3" face="Times New Roma" color="#008080"><u>ver Eq. 26 en Heat conduction</u></font></a><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">).</font>
+</p><p align="left"><table>
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>&gt; </strong></font></td>
+<td valign="top"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>eqBE:=rho*c*As*Diff(T(x,t),t)=k*As*Diff(T(x,t),x,x)+phi*As-p*(epsilon1+epsilon2)*sigma*(T(x,t)^4-Tinf^4);eqBEst:=0=k*Diff(T(x),x,x)+phi-(p/As)*(epsilon1+epsilon2)*sigma*(T(x)^4-Tinf^4);eqBEstlin:=0=k*Diff(T(x),x,x)+phi-(p/As)*(epsilon1+epsilon2)*sigma*4*Tmean^3*(T(x)-Tinf);eqBEstlin:=0=Diff(T(x),x,x)+phi/k-(p*h/(k*As))*(T(x)-Tinf);eqh:=h=4*(epsilon1+epsilon2)*sigma*Tmean^3;eqm:=m=sqrt(p*h/(k*As));eqBEstlin:=0=diff(T(x),x,x)+phi/k-m^2*(T(x)-Tinf);eqTlin:=dsolve({%,T(0)=Tb,D(T)(L)=0},T(x));</strong></font></td>
+</tr>
+</tbody></table>
+</p><p align="center"><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><table width="100%">
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_51.gif" alt="`*`(rho, `*`(c, `*`(As, `*`(Diff(T(x, t), t))))) = `+`(`*`(k, `*`(As, `*`(Diff(T(x, t), x, x)))), `*`(phi, `*`(As)), `-`(`*`(p, `*`(`+`(epsilon1, epsilon2), `*`(sigma, `*`(`+`(`*`(`^`(T(x, t), 4)), `-..." width="621" height="44" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_52.gif" alt="0 = `+`(`*`(k, `*`(Diff(T(x), x, x))), phi, `-`(`/`(`*`(p, `*`(`+`(epsilon1, epsilon2), `*`(sigma, `*`(`+`(`*`(`^`(T(x), 4)), `-`(`*`(`^`(Tinf, 4)))))))), `*`(As))))" width="459" height="48" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_53.gif" alt="0 = `+`(`*`(k, `*`(Diff(T(x), x, x))), phi, `-`(`/`(`*`(4, `*`(p, `*`(`+`(epsilon1, epsilon2), `*`(sigma, `*`(`^`(Tmean, 3), `*`(`+`(T(x), `-`(Tinf)))))))), `*`(As))))" width="524" height="48" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_54.gif" alt="0 = `+`(Diff(T(x), x, x), `/`(`*`(phi), `*`(k)), `-`(`/`(`*`(p, `*`(h, `*`(`+`(T(x), `-`(Tinf))))), `*`(k, `*`(As)))))" width="373" height="47" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_55.gif" alt="h = `+`(`*`(4, `*`(`+`(epsilon1, epsilon2), `*`(sigma, `*`(`^`(Tmean, 3))))))" width="222" height="23" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_56.gif" alt="m = `*`(`^`(`/`(`*`(p, `*`(h)), `*`(k, `*`(As))), `/`(1, 2)))" width="148" height="42" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_57.gif" alt="0 = `+`(diff(diff(T(x), x), x), `/`(`*`(phi), `*`(k)), `-`(`*`(`^`(m, 2), `*`(`+`(T(x), `-`(Tinf))))))" width="363" height="47" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_58.gif" alt="T(x) = `+`(`/`(`*`(exp(`*`(m, `*`(x))), `*`(exp(`+`(`-`(`*`(m, `*`(L))))), `*`(`+`(`*`(Tb, `*`(k, `*`(`^`(m, 2)))), `-`(`*`(Tinf, `*`(k, `*`(`^`(m, 2))))), `-`(phi))))), `*`(`^`(m, 2), `*`(k, `*`(`+`(..." width="741" height="48" border="0" align="middle"></font></td>
+</tr>
+</tbody></table>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">Tomando
+ una temperatura media para la PCB de 100 ºC (Tmean=373 K), y 
+sustituyendo valores, las pérdidas radiativas en vacío (no dicen nada 
+sobre si la caja va presurizada) serían:</font>
+</p><p align="left"><table>
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>&gt; </strong></font></td>
+<td valign="top"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>Tmean=373*K_;eqh_:=subs(%,dat,eqh);eqm_:=subs(%,p=Ly,eqkeff_,As=As_,dat,eqm);Tp0=3*Wic/(2*k*As);eqTlin_:=evalf(subs(%,eqkeff_,eqphi,eqm_,As=As_,Tinf=Tw,L=Lx,dat,SI0,eqTlin));plot([rhs(%)-To,subs(eqkeff_,eqphi,L=Lx,dat,SI0,rhs(eqT))-To],x=0..subs(dat,SI0,Lx),T_C=0..150);Tm_:=evalf(subs(x=Lx,dat,SI0,rhs(eqTlin_)))*K_;'Tm'=TKC(%);Q0:=k*As*Diff(T(x),x)[x=0];Q0_:=evalf(subs(x=0,eqkeff_,As=As_,SI0,k*As*diff(rhs(eqTlin_),x)))*W_;</strong></font></td>
+</tr>
+</tbody></table>
+</p><p align="center"><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><table width="100%">
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_59.gif" alt="Tmean = `+`(`*`(373, `*`(K_)))" width="116" height="17" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_60.gif" alt="h = `+`(`/`(`*`(14.12377504, `*`(W_)), `*`(`^`(m_, 2), `*`(K_))))" width="161" height="42" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_61.gif" alt="m = `+`(`*`(25.15804850, `*`(`^`(`/`(1, `*`(`^`(m_, 2))), `/`(1, 2)))))" width="195" height="47" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_62.gif" alt="Tp0 = `+`(`/`(`*`(`/`(3, 2), `*`(Wic)), `*`(k, `*`(As))))" width="110" height="36" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_63.gif" alt="T(x) = `+`(`-`(`*`(2.750141910, `*`(exp(`+`(`*`(25.15804850, `*`(x))))))), `-`(`*`(93.10978717, `*`(exp(`+`(`-`(`*`(25.15804850, `*`(x)))))))), 394.0099289)" width="389" height="22" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_64.gif" alt="Plot_2d" width="498" height="181" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_65.gif" alt="`+`(`*`(362.0058587, `*`(K_)))" width="131" height="17" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_66.gif" alt="Tm = `+`(`*`(88.8558587, `*`(�C)))" width="101" height="17" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_67.gif" alt="`*`(k, `*`(As, `*`((Diff(T(x), x))[x = 0])))" width="194" height="43" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_68.gif" alt="`+`(`*`(5.072807221, `*`(W_)))" width="116" height="17" border="0" align="middle"></font></td>
+</tr>
+</tbody></table>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">i.e.
+ con radiación lineal la Tmax=89 ºC (en vez de 143 ºC del apartado a), 
+cuya solución también se ha dibujado para comparar). Esto ya está en el 
+límite de lo aceptable para IC normales. El calor que sale por 
+conducción al encastre es 5,1 W (en vez de los 3Wic/2=7,5 W), luego han 
+salido 2.4 W por radiación (ambas caras). </font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000"></font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">d)	Resolver el caso anterior pero sin linealizar y con la disipación no uniforme. </font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">Aquí
+ solo vamos a hacer otra estimación, rebajando la Tmean de 100 ºC a 60 
+ºC que parece más apropiado, y luego lo resolveremos con Matlab.</font>
+</p><p align="left"><table>
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>&gt; </strong></font></td>
+<td valign="top"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>Tmean_approx:=333*K_;Qrad:=(epsilon1+epsilon2)*Lx*Ly*sigma*(Tmean^4-Tw^4);Qrad_:=subs(dat,(epsilon1+epsilon2)*Lx*Ly*sigma*(Tmean_approx^4-Tw^4));Tmax='Tb+(Tm-Tb)*(Wnet/Wtot)';Tmax_:=subs(dat,Tb+(Tm_-Tb)*((3*Wic-Qrad_)/(3*Wic)));'Tmax_'=TKC(%);</strong></font></td>
+</tr>
+</tbody></table>
+</p><p align="center"><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><table width="100%">
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_69.gif" alt="`+`(`*`(333, `*`(K_)))" width="178" height="17" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_70.gif" alt="`*`(`+`(epsilon1, epsilon2), `*`(Lx, `*`(Ly, `*`(sigma, `*`(`+`(`*`(`^`(Tmean, 4)), `-`(`*`(`^`(Tw, 4)))))))))" width="299" height="23" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_71.gif" alt="`+`(`*`(.9768497226, `*`(W_)))" width="130" height="17" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_72.gif" alt="Tmax = `+`(Tb, `/`(`*`(`+`(Tm, `-`(Tb)), `*`(Wnet)), `*`(Wtot)))" width="213" height="36" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_73.gif" alt="`+`(`*`(357.8473536, `*`(K_)))" width="146" height="17" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_74.gif" alt="Tmax_ = `+`(`*`(84.6973536, `*`(�C)))" width="124" height="17" border="0" align="middle"></font></td>
+</tr>
+</tbody></table>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">i.e.
+ ahora, de los 7,5 W disipados en media tarjeta, solo 1 W sale por 
+radiación (ambas caras), y como la diferencia Tmax-Tb es proporcional a 
+phi, resulta que la Tmax será de 85 ºC. Los resultados para la Tmax son 
+parecidos, pero la discrepancia en Qrad es muy grande.</font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">Las capacidades térmicas por unidad de volumen, rho·c, son:</font>
+</p><p align="left"><table>
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>&gt; </strong></font></td>
+<td valign="top"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>eqrceffIC:=rc=(rcic*Lzic+rcC*f*Lcu+rcF*(Lz-2*Lcu)+rcC*Lcu)/(Lz+2*Lcu);rcC_:=subs(datC,rho*c);rcF_:=subs(datF,rho*c);rcic_:=subs(dat,Cic/(Lxic*Lyic*Lzic));eqrceff_:=subs(rcC=rcC_,rcF=rcF_,rcic=0,dat,eqrceffIC);eqrceffIC_:=subs(rcC=rcC_,rcF=rcF_,rcic=rcic_,dat,eqrceffIC);</strong></font></td>
+</tr>
+</tbody></table>
+</p><p align="center"><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><p align="center"></p><table width="100%">
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_75.gif" alt="rc = `/`(`*`(`+`(`*`(rcic, `*`(Lzic)), `*`(rcC, `*`(f, `*`(Lcu))), `*`(rcF, `*`(`+`(Lz, `-`(`*`(2, `*`(Lcu)))))), `*`(rcC, `*`(Lcu)))), `*`(`+`(Lz, `*`(2, `*`(Lcu)))))" width="467" height="36" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_76.gif" alt="`+`(`/`(`*`(3474900., `*`(J_)), `*`(`^`(m_, 3), `*`(K_))))" width="152" height="47" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_77.gif" alt="`+`(`/`(`*`(1295000, `*`(J_)), `*`(`^`(m_, 3), `*`(K_))))" width="152" height="42" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_78.gif" alt="`+`(`/`(`*`(8333333.332, `*`(kg_)), `*`(m_, `*`(`^`(s_, 2), `*`(K_)))))" width="160" height="47" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_79.gif" alt="rc = `+`(`/`(`*`(1252574.688, `*`(kg_)), `*`(m_, `*`(`^`(s_, 2), `*`(K_)))))" width="207" height="47" border="0" align="middle"></font></td>
+</tr>
+<tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#337dff;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#0000ff"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_80.gif" alt="rc = `+`(`/`(`*`(16877574.69, `*`(kg_)), `*`(m_, `*`(`^`(s_, 2), `*`(K_)))))" width="222" height="47" border="0" align="middle"></font></td>
+</tr>
+</tbody></table>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">i.e. 1,25e6 J/(m3·K) para la PCB y 16.9e6 J/(m3·K) donde están los IC, para los que se ha calculado rcIC=Cic/(Lxic*Lyic*Lzic).</font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">Una estimación del tiempo de relajación de la PCB sola sería Dt=rho·c·(L/2)^2/k=1,25e6·0.07^2/15=410 s (con los IC será mayor).</font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">La solución numérica en Matlab para este problema 1D discretizado en 80 tramos, con y sin pérdidas radiativas, es:</font>
+</p><p align="center"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_81.gif" alt="Image" width="768" height="150" border="0" align="middle"></font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">obteniendo en el estacionario (al cabo de 3000 s) un valor de Tmax=120 ºC sin radiación, y con pérdidas radiativas Tmax=90 ºC.</font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000"></font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">e)
+	Resolver el problema térmico bidimensional estacionario y comparar el 
+perfil central de temperaturas con el del caso anterior.</font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">La solución numérica en Matlab para el problema 2D, da una Tmax=378 K=105 ºC, con los perfiles siguientes:</font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000"><img src="Soluci%C3%B3n_P1_TCCT_files/p98_82.gif" alt="Image" width="768" height="143" border="0" align="middle"></font>
+</p><p align="left"><font style="--darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="" size="3" face="Times New Roman" color="#000000">resultando
+ ahora que se pierden 4,4 W por radiación y 10,6 W por conducción (para 
+media tarjeta serían 2,2 W y 5,3 W. Nótese que la Tmax-2D=105 ºC es 
+mayor que la Tmax-1D=90 ºC, como era de esperar por estar más 
+concentrada la disipación. </font>
+</p><p align="left"><table>
+<tbody><tr>
+<td valign="top" align="center"><font style="--darkreader-inline-color:#ff1a1a;" data-darkreader-inline-color="" size="3" face="monospace" color="#ff0000"><strong>&gt; </strong></font></td>
+<td valign="top"></td>
+</tr>
+</tbody></table>
+
+</p><script>mendeleyWebImporter = {
+  downloadPdfs(t) { return this._call('downloadPdfs', [t]); },
+  open() { return this._call('open', []); },
+  _call(methodName, methodArgs) {
+    const id = Math.random();
+    window.postMessage({ id, token: '0.12284894719029615', methodName, methodArgs }, 'http://imartinez.etsiae.upm.es');
+    return new Promise(resolve => {
+      const listener = window.addEventListener('message', event => {
+        const data = event.data;
+        if (typeof data !== 'object' || !('result' in data) || data.id !== id) return;
+        window.removeEventListener('message', listener);
+        resolve(data.result);
+      });
+    });
+  }
+};</script></body></html>
